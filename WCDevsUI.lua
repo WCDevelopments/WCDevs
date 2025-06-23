@@ -70,14 +70,14 @@ end
 
 local requestsDisabled = true --getgenv and getgenv().DISABLE_RAYFIELD_REQUESTS
 local InterfaceBuild = '3K3W'
-local Release = "Build 1.68"
+local Release = "Build 1.0.0"
 local RayfieldFolder = "Rayfield"
 local ConfigurationFolder = RayfieldFolder.."/Configurations"
 local ConfigurationExtension = ".rfld"
 local settingsTable = {
 	General = {
 		-- if needs be in order just make getSetting(name)
-		rayfieldOpen = {Type = 'bind', Value = 'K', Name = 'Rayfield Keybind'},
+		rayfieldOpen = {Type = 'bind', Value = 'K', Name = 'Toggle Keybind'},
 		-- buildwarnings
 		-- rayfieldprompts
 
@@ -221,10 +221,10 @@ if not requestsDisabled then
 				end)
 				if success and reporter then
 					pcall(function()
-						reporter.report("Rayfield", Release, InterfaceBuild)
+						reporter.report("WCDevs", Release, InterfaceBuild)
 					end)
 				else
-					warn("Failed to load or execute the reporter. \nPlease notify Rayfield developers at sirius.menu/discord.")
+					warn("Failed to load or execute the reporter. \nPlease notify WCDevs developers at sirius.menu/discord.")
 				end
 			end)
 			if debugX then warn('Finished Report') end
@@ -1484,14 +1484,14 @@ local function createSettings(window)
 		return
 	end
 
-	local newTab = window:CreateTab('Rayfield Settings', 0, true)
+	local newTab = window:CreateTab('Settings', 0, true)
 
-	if TabList['Rayfield Settings'] then
-		TabList['Rayfield Settings'].LayoutOrder = 1000
+	if TabList['Settings'] then
+		TabList['Settings'].LayoutOrder = 1000
 	end
 
-	if Elements['Rayfield Settings'] then
-		Elements['Rayfield Settings'].LayoutOrder = 1000
+	if Elements['Settings'] then
+		Elements['Settings'].LayoutOrder = 1000
 	end
 
 	-- Create sections and elements
@@ -1653,8 +1653,8 @@ function RayfieldLibrary:CreateWindow(Settings)
 			while true do
 				task.wait(math.random(180, 600))
 				RayfieldLibrary:Notify({
-					Title = "Rayfield Interface",
-					Content = "Enjoying this UI library? Find it at sirius.menu/discord",
+					Title = "WCDevs",
+					Content = "Thankyou for using WCDevs Interface! If you have any issues, please join our Discord server.\nhttps://discord.gg/Jp47sBCk52",
 					Duration = 7,
 					Image = 4370033185,
 				})
@@ -2174,7 +2174,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			local opened = false 
 			local mouse = Players.LocalPlayer:GetMouse()
-			Main.Image = "http://www.roblox.com/asset/?id=11415645739"
+			Main.Image = ""
 			local mainDragging = false 
 			local sliderDragging = false 
 			ColorPicker.Interact.MouseButton1Down:Connect(function()
@@ -3641,7 +3641,7 @@ if Topbar:FindFirstChild('Settings') then
 				end
 			end
 
-			Elements.UIPageLayout:JumpTo(Elements['Rayfield Settings'])
+			Elements.UIPageLayout:JumpTo(Elements['Settings'])
 		end)
 	end)
 
