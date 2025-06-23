@@ -31,7 +31,7 @@ gui.ResetOnSpawn = false
 gui.IgnoreGuiInset = true
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 400, 0, 250)
+frame.Size = UDim2.new(0, defaultWidth, 0, defaultHeight)
 frame.Position = UDim2.new(1, -410, 0.3, 0)
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.BorderSizePixel = 0
@@ -40,6 +40,17 @@ frame.Parent = gui
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
 
 local lastFrameSize = frame.Size
+
+local viewportSize = game:GetService("Workspace").CurrentCamera.ViewportSize
+local isMobile = viewportSize.X < 800
+
+-- Responsive default sizes
+local defaultWidth = isMobile and 320 or 400
+local defaultHeight = isMobile and 220 or 250
+local minWidth = isMobile and 280 or 400
+local minHeight = isMobile and 200 or 250
+local maxWidth = isMobile and 420 or 600
+local maxHeight = isMobile and 400 or 600
 
 -- Log label bottom-left
 local logLabel = Instance.new("TextLabel")
@@ -67,8 +78,8 @@ Instance.new("UICorner", resizeHandle).CornerRadius = UDim.new(0, 4)
 
 local resizing = false
 local resizeStart, initialSize
-local MIN_WIDTH, MIN_HEIGHT = 400, 250
-local MAX_WIDTH, MAX_HEIGHT = 600, 600
+local MIN_WIDTH, MIN_HEIGHT = minWidth, minHeight
+local MAX_WIDTH, MAX_HEIGHT = maxWidth, maxHeight
 
 resizeHandle.InputBegan:Connect(function(input)
 	if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and not isMinimized then
