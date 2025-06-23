@@ -40,6 +40,7 @@ local minHeight = isMobile and 200 or 250
 local maxWidth = isMobile and 420 or 600
 local maxHeight = isMobile and 400 or 600
 
+
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, defaultWidth, 0, defaultHeight)
 frame.Position = UDim2.new(1, -410, 0.3, 0)
@@ -48,6 +49,11 @@ frame.BorderSizePixel = 0
 frame.ClipsDescendants = true
 frame.Parent = gui
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
+
+-- UIScale for zoom-out effect
+local uiScale = Instance.new("UIScale")
+uiScale.Parent = frame
+uiScale.Scale = 1
 
 local lastFrameSize = frame.Size
 
@@ -91,10 +97,23 @@ end)
 UserInputService.InputChanged:Connect(function(input)
 	if resizing and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) and not isMinimized then
 		local delta = input.Position - resizeStart
-		local newWidth = math.clamp(initialSize.X.Offset + delta.X, MIN_WIDTH, MAX_WIDTH)
-		local newHeight = math.clamp(initialSize.Y.Offset + delta.Y, MIN_HEIGHT, MAX_HEIGHT)
-		frame.Size = UDim2.new(initialSize.X.Scale, newWidth, initialSize.Y.Scale, newHeight)
+		local rawWidth = initialSize.X.Offset + delta.X
+		local rawHeight = initialSize.Y.Offset + delta.Y
+
+		local clampedWidth = math.clamp(rawWidth, MIN_WIDTH, MAX_WIDTH)
+		local clampedHeight = math.clamp(rawHeight, MIN_HEIGHT, MAX_HEIGHT)
+
+		frame.Size = UDim2.new(initialSize.X.Scale, clampedWidth, initialSize.Y.Scale, clampedHeight)
 		lastFrameSize = frame.Size
+
+		-- Zoom out if size below min
+		local scaleX = rawWidth < MIN_WIDTH and rawWidth / MIN_WIDTH or 1
+		local scaleY = rawHeight < MIN_HEIGHT and rawHeight / MIN_HEIGHT or 1
+		local targetScale = math.clamp(math.min(scaleX, scaleY), 0.5, 1)
+
+		TweenService:Create(uiScale, TweenInfo.new(0.1, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+			Scale = targetScale
+		}):Play()
 	end
 end)
 
@@ -214,8 +233,10 @@ list.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
 local function updateMinimizeVisuals()
 	for _, child in ipairs(frame:GetChildren()) do
-		if not (child.Name == "Minimize" or child.Name == "Timer" or child.name == "ButtonHolder" or child.Name == "Title" or child.Name == "Refresh" or child.Name == "Close" or child:IsA("UICorner")) then
-			child.Visible = not isMinimized
+		if child:IsA("Frame") or child:IsA("ScrollingFrame") or child:IsA("TextLabel") or child:IsA("ImageButton") then
+			if child.Name ~= "Title" and child.Name ~= "Timer" and child.Name ~= "ButtonHolder" then
+				child.Visible = not isMinimized
+			end
 		end
 	end
 end
