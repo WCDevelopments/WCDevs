@@ -1,61 +1,79 @@
 local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
-local confirmGui
+local playerGui = player:WaitForChild("PlayerGui")
 
+local confirmGui
+local highlightedFruits = {}
 local harvestTool = Instance.new("Tool")
 harvestTool.Name = "Harvest Tool"
 harvestTool.RequiresHandle = false
 harvestTool.CanBeDropped = false
 harvestTool.Parent = player:WaitForChild("Backpack")
 
-local lastHighlighted = nil
-local activePlant = nil
+-- Clear all active highlights
+local function clearHighlights()
+	for _, hl in ipairs(highlightedFruits) do
+		if hl and hl.Parent then
+			hl:Destroy()
+		end
+	end
+	table.clear(highlightedFruits)
+end
 
--- GUI creator
+-- Highlight fruit models inside Fruits folder
+local function highlightFruits(fruitsFolder)
+	clearHighlights()
+
+	for _, fruitModel in ipairs(fruitsFolder:GetChildren()) do
+		if fruitModel:IsA("Model") then
+			local primary = fruitModel:FindFirstChildWhichIsA("BasePart")
+			if primary then
+				local highlight = Instance.new("Highlight")
+				highlight.Name = "FruitHighlight"
+				highlight.FillTransparency = 1
+				highlight.OutlineColor = Color3.new(1, 1, 1)
+				highlight.OutlineTransparency = 0
+				highlight.Parent = fruitModel
+				table.insert(highlightedFruits, highlight)
+			end
+		end
+	end
+end
+
+-- Fluent-style confirm GUI
 local function createConfirmGui(onConfirm, onCancel)
-	local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-	local TweenService = game:GetService("TweenService")
-
-	-- 🧹 Destroy any existing confirm UI
+	-- Destroy previous one
 	local old = playerGui:FindFirstChild("FluentHarvestConfirm")
 	if old then old:Destroy() end
-	
-	if confirmGui and confirmGui.Parent then
-		confirmGui:Destroy()
-	end
 
-	local screenGui = Instance.new("ScreenGui")
-	screenGui.Name = "FluentHarvestConfirm"
-	screenGui.IgnoreGuiInset = true
-	screenGui.ResetOnSpawn = false
-	screenGui.Parent = playerGui
+	confirmGui = Instance.new("ScreenGui")
+	confirmGui.Name = "FluentHarvestConfirm"
+	confirmGui.IgnoreGuiInset = true
+	confirmGui.ResetOnSpawn = false
+	confirmGui.Parent = playerGui
 
-	-- 🪟 Main Frame
 	local frame = Instance.new("Frame")
 	frame.Size = UDim2.new(0, 360, 0, 160)
 	frame.Position = UDim2.new(0.5, 0, 0.5, 0)
 	frame.AnchorPoint = Vector2.new(0.5, 0.5)
 	frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-	frame.BackgroundTransparency = 0.1 -- Transparent Fluent-style
+	frame.BackgroundTransparency = 0.1
 	frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
 	frame.BorderSizePixel = 1
-	frame.Parent = screenGui
+	frame.Parent = confirmGui
 	Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
 
 	-- Popup animation
 	frame.Size = UDim2.new(0, 360, 0, 0)
-	TweenService:Create(frame, TweenInfo.new(0.25, Enum.EasingStyle.Sine), {
-		Size = UDim2.new(0, 360, 0, 160)
-	}):Play()
+	TweenService:Create(frame, TweenInfo.new(0.25), { Size = UDim2.new(0, 360, 0, 160) }):Play()
 
-	-- Padding
 	local padding = Instance.new("UIPadding", frame)
 	padding.PaddingLeft = UDim.new(0, 16)
 	padding.PaddingRight = UDim.new(0, 16)
 	padding.PaddingTop = UDim.new(0, 16)
 	padding.PaddingBottom = UDim.new(0, 12)
 
-	-- Title
 	local title = Instance.new("TextLabel")
 	title.Size = UDim2.new(1, 0, 0, 30)
 	title.BackgroundTransparency = 1
@@ -66,7 +84,6 @@ local function createConfirmGui(onConfirm, onCancel)
 	title.TextXAlignment = Enum.TextXAlignment.Left
 	title.Parent = frame
 
-	-- Body text
 	local body = Instance.new("TextLabel")
 	body.Size = UDim2.new(1, 0, 0, 40)
 	body.Position = UDim2.new(0, 0, 0, 40)
@@ -79,7 +96,6 @@ local function createConfirmGui(onConfirm, onCancel)
 	body.TextXAlignment = Enum.TextXAlignment.Left
 	body.Parent = frame
 
-	-- Button holder
 	local buttonHolder = Instance.new("Frame")
 	buttonHolder.Size = UDim2.new(1, 0, 0, 36)
 	buttonHolder.Position = UDim2.new(0, 0, 1, -42)
@@ -91,7 +107,6 @@ local function createConfirmGui(onConfirm, onCancel)
 	layout.HorizontalAlignment = Enum.HorizontalAlignment.Right
 	layout.Padding = UDim.new(0, 10)
 
-	-- Create Fluent-style button
 	local function createButton(text, callback)
 		local btn = Instance.new("TextButton")
 		btn.Name = text
@@ -105,22 +120,20 @@ local function createConfirmGui(onConfirm, onCancel)
 		Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
 		btn.Parent = buttonHolder
 
-		local hoverTween
 		btn.MouseEnter:Connect(function()
-			hoverTween = TweenService:Create(btn, TweenInfo.new(0.15), {
+			TweenService:Create(btn, TweenInfo.new(0.15), {
 				BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-			})
-			hoverTween:Play()
+			}):Play()
 		end)
 		btn.MouseLeave:Connect(function()
-			if hoverTween then hoverTween:Cancel() end
 			TweenService:Create(btn, TweenInfo.new(0.15), {
 				BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 			}):Play()
 		end)
 
 		btn.MouseButton1Click:Connect(function()
-			screenGui:Destroy()
+			if confirmGui then confirmGui:Destroy() end
+			confirmGui = nil
 			callback()
 		end)
 	end
@@ -129,48 +142,57 @@ local function createConfirmGui(onConfirm, onCancel)
 	createButton("No", onCancel)
 end
 
+-- Main click handler when plant is selected
+local function onPlantClicked(plantModel)
+	local fruitsFolder = plantModel:FindFirstChild("Fruits")
+	if not fruitsFolder then return end
 
--- Remove highlight
-local function removeHighlight(plant)
-	if plant and plant:IsA("Model") then
-		for _, v in ipairs(plant:GetDescendants()) do
-			if v:IsA("SelectionBox") and v.Name == "HighlightBox" then
-				v:Destroy()
+	highlightFruits(fruitsFolder)
+
+	createConfirmGui(function()
+		clearHighlights()
+		for _, fruit in ipairs(fruitsFolder:GetChildren()) do
+			for _, numbered in ipairs(fruit:GetChildren()) do
+				if tonumber(numbered.Name) then
+					for _, obj in ipairs(numbered:GetDescendants()) do
+						if obj:IsA("ProximityPrompt") then
+							fireproximityprompt(obj, true)
+						end
+					end
+				end
 			end
 		end
-	end
+	end, function()
+		clearHighlights()
+	end)
 end
 
--- Highlight new plant
-local function highlightPlant(plant)
-	removeHighlight(lastHighlighted)
-	lastHighlighted = plant
-	activePlant = plant
+local function setPromptVisibility(visible)
+	for i = 1, 6 do
+		local farm = workspace:FindFirstChild("Farm")
+		if not farm then continue end
 
-	for _, part in ipairs(plant:GetDescendants()) do
-		if part:IsA("BasePart") then
-			local box = Instance.new("SelectionBox")
-			box.Name = "HighlightBox"
-			box.Adornee = part
-			box.LineThickness = 0.03
-			box.Color3 = Color3.fromRGB(255, 255, 255) -- White outline
-			box.SurfaceTransparency = 1 -- No glow/inner highlight
-			box.Parent = part
-		end
-	end
-end
-
--- Harvest logic (fires all 2 > ProximityPrompt)
-local function harvestPlant(plant)
-	local fruits = plant:FindFirstChild("Fruits")
-	if not fruits then return end
-
-	for _, fruit in ipairs(fruits:GetChildren()) do
-		for _, numberedFolder in ipairs(fruit:GetChildren()) do
-			if tonumber(numberedFolder.Name) then
-				for _, descendant in ipairs(numberedFolder:GetDescendants()) do
-					if descendant:IsA("ProximityPrompt") then
-						fireproximityprompt(descendant, true)
+		local section = farm:GetChildren()[i]
+		if section and section:FindFirstChild("Important") and section.Important:FindFirstChild("Plants_Physical") then
+			for _, plant in ipairs(section.Important.Plants_Physical:GetChildren()) do
+				local fruits = plant:FindFirstChild("Fruits")
+				if fruits then
+					for _, fruit in ipairs(fruits:GetChildren()) do
+						for _, folder in ipairs(fruit:GetChildren()) do
+							if tonumber(folder.Name) then
+								for _, obj in ipairs(folder:GetDescendants()) do
+									if obj:IsA("ProximityPrompt") then
+										if visible then
+											obj.MaxActivationDistance = 10 -- or original value
+											obj.UIOffset = Vector2.new(0, 0)
+										else
+											obj.MaxActivationDistance = 0
+											obj.UIOffset = Vector2.new(0, 9999) -- effectively hides UI
+										end
+									end
+								end
+							end
+						end
 					end
 				end
 			end
@@ -178,47 +200,32 @@ local function harvestPlant(plant)
 	end
 end
 
--- Find plant from clicked object
-local function findPlantFromTarget(target)
-	local farm = workspace:FindFirstChild("Farm")
-	if not farm then return nil end
 
-	local sections = farm:GetChildren()
-	for i = 1, math.min(6, #sections) do
-		local section = sections[i]
-		local important = section:FindFirstChild("Important")
-		if important then
-			local plants = important:FindFirstChild("Plants_Physical")
-			if plants then
-				for _, plant in ipairs(plants:GetChildren()) do
-					if plant:IsA("Model") and plant:IsAncestorOf(target) then
-						return plant
-					end
-				end
-			end
-		end
-	end
-
-	return nil
-end
-
--- Handle tool equip
+-- Tool equipped handler
 harvestTool.Equipped:Connect(function(mouse)
+    setPromptVisibility(false)
 	mouse.Button1Down:Connect(function()
 		local target = mouse.Target
 		if not target then return end
 
-		local plant = findPlantFromTarget(target)
-		if plant then
-			highlightPlant(plant)
+		for i = 1, 6 do
+			local farm = workspace:FindFirstChild("Farm")
+			if not farm then continue end
 
-			createConfirmGui(function()
-				harvestPlant(plant)
-				removeHighlight(plant)
-			end, function()
-				-- No selected, just unhighlight
-				removeHighlight(plant)
-			end)
+			local section = farm:GetChildren()[i]
+			if section and section:FindFirstChild("Important") and section.Important:FindFirstChild("Plants_Physical") then
+				for _, plant in ipairs(section.Important.Plants_Physical:GetChildren()) do
+					if plant:IsA("Model") and target:IsDescendantOf(plant) then
+						onPlantClicked(plant)
+						return
+					end
+				end
+			end
 		end
 	end)
 end)
+
+harvestTool.Unequipped:Connect(function()
+	setPromptVisibility(true)
+end)
+
