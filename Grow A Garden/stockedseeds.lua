@@ -31,7 +31,7 @@ gui.ResetOnSpawn = false
 gui.IgnoreGuiInset = true
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 400, 0, 400)
+frame.Size = UDim2.new(0, 400, 0, 250)
 frame.Position = UDim2.new(1, -410, 0.3, 0)
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.BorderSizePixel = 0
@@ -71,25 +71,39 @@ local MIN_WIDTH, MIN_HEIGHT = 400, 250
 local MAX_WIDTH, MAX_HEIGHT = 600, 600
 
 resizeHandle.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 and not isMinimized then
+	if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and not isMinimized then
 		resizing = true
 		resizeStart = input.Position
 		initialSize = frame.Size
-		input.Changed:Connect(function()
-			if input.UserInputState == Enum.UserInputState.End then
-				resizing = false
-			end
-		end)
 	end
 end)
 
 UserInputService.InputChanged:Connect(function(input)
-	if resizing and input.UserInputType == Enum.UserInputType.MouseMovement and not isMinimized then
+	if resizing and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) and not isMinimized then
 		local delta = input.Position - resizeStart
 		local newWidth = math.clamp(initialSize.X.Offset + delta.X, MIN_WIDTH, MAX_WIDTH)
 		local newHeight = math.clamp(initialSize.Y.Offset + delta.Y, MIN_HEIGHT, MAX_HEIGHT)
 		frame.Size = UDim2.new(initialSize.X.Scale, newWidth, initialSize.Y.Scale, newHeight)
 		lastFrameSize = frame.Size
+	end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+		resizing = false
+		dragging = false
+	end
+end)
+
+resizeHandle.MouseEnter:Connect(function()
+	if not UserInputService.TouchEnabled then
+		resizeHandle.Cursor = "SizeNWSE"
+	end
+end)
+
+resizeHandle.MouseLeave:Connect(function()
+	if not UserInputService.TouchEnabled then
+		resizeHandle.Cursor = "Arrow"
 	end
 end)
 
@@ -291,19 +305,55 @@ local function createSeedEntry(seedName, stockTextLabel, rarityText)
 			end
 		end
 	end
-
+	local function scanSeeds()
+    	list:ClearAllChildren()
+    	createLayout()
+    
+    	local allSeeds = {}
+    
+    	for _, seedFrame in ipairs(seedContainer:GetChildren()) do
+    		if seedFrame:IsA("Frame") and seedFrame:FindFirstChild("Main_Frame") then
+    			local main = seedFrame.Main_Frame
+    			local stockLabel = main:FindFirstChild("Stock_Text")
+    			local rarityLabel = main:FindFirstChild("Rarity_Text")
+    
+    			if stockLabel and rarityLabel and stockLabel:IsA("TextLabel") then
+    				local count = tonumber(stockLabel.Text:match("(%d+)"))
+    				if count and count >= 1 then
+    					table.insert(allSeeds, {
+    						name = seedFrame.Name:gsub("_Frame", ""),
+    						stockLabel = stockLabel,
+    						rarity = rarityLabel.Text
+    					})
+    				end
+    			end
+    		end
+    	end
+    
+    	table.sort(allSeeds, function(a, b)
+    		return (rarityOrder[a.rarity] or 0) > (rarityOrder[b.rarity] or 0)
+    	end)
+    
+    	for _, seed in ipairs(allSeeds) do
+    		createSeedEntry(seed.name, seed.stockLabel, seed.rarity)
+    	end
+    end
 	buyBtn.MouseButton1Click:Connect(function()
-		replicatedStorage.GameEvents.BuySeedStock:FireServer(seedName:gsub(" ", ""))
-		task.delay(0.2, updateSeed)
-	end)
-
-	buyAllBtn.MouseButton1Click:Connect(function()
-		local safeName = seedName:gsub(" ", "")
-		for _ = 1, stockCount do
-			replicatedStorage.GameEvents.BuySeedStock:FireServer(safeName)
-		end
-		task.delay(0.4, updateSeed)
-	end)
+    	replicatedStorage.GameEvents.BuySeedStock:FireServer(seedName:gsub(" ", ""))
+    	task.delay(0.4, function()
+    	   scanSeeds()
+        end)
+    end)
+    
+    buyAllBtn.MouseButton1Click:Connect(function()
+    	local safeName = seedName:gsub(" ", "")
+    	for _ = 1, stockCount do
+    		replicatedStorage.GameEvents.BuySeedStock:FireServer(safeName)
+    	end
+    	task.delay(0.4, function()
+        	scanSeeds()
+        end)
+    end)
 end
 
 local function scanSeeds()
@@ -339,18 +389,16 @@ local function scanSeeds()
 		createSeedEntry(seed.name, seed.stockLabel, seed.rarity)
 	end
 end
-
 refreshBtn.MouseButton1Click:Connect(scanSeeds)
 scanSeeds()
+
 
 local seedTimerLabel = seedShop:WaitForChild("Frame"):WaitForChild("Frame"):WaitForChild("Timer")
 seedTimerLabel:GetPropertyChangedSignal("Text"):Connect(function()
 	local text = seedTimerLabel.Text
 	logLabel.Text = text
-	if string.match(text, "^New seeds in 0s") then
+	if string.match(text, "^New seeds in 4m 59s") then
 	    wait(1.5)
 		scanSeeds()
-		print("refreshing...")
 	end
 end)
-
