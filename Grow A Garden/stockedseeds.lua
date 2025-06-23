@@ -30,6 +30,16 @@ gui.Name = "ModernSeedRestock"
 gui.ResetOnSpawn = false
 gui.IgnoreGuiInset = true
 
+local viewportSize = game:GetService("Workspace").CurrentCamera.ViewportSize
+local isMobile = viewportSize.X < 800
+
+local defaultWidth = isMobile and 320 or 400
+local defaultHeight = isMobile and 220 or 250
+local minWidth = isMobile and 280 or 400
+local minHeight = isMobile and 200 or 250
+local maxWidth = isMobile and 420 or 600
+local maxHeight = isMobile and 400 or 600
+
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, defaultWidth, 0, defaultHeight)
 frame.Position = UDim2.new(1, -410, 0.3, 0)
@@ -40,17 +50,6 @@ frame.Parent = gui
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
 
 local lastFrameSize = frame.Size
-
-local viewportSize = game:GetService("Workspace").CurrentCamera.ViewportSize
-local isMobile = viewportSize.X < 800
-
--- Responsive default sizes
-local defaultWidth = isMobile and 320 or 400
-local defaultHeight = isMobile and 220 or 250
-local minWidth = isMobile and 280 or 400
-local minHeight = isMobile and 200 or 250
-local maxWidth = isMobile and 420 or 600
-local maxHeight = isMobile and 400 or 600
 
 -- Log label bottom-left
 local logLabel = Instance.new("TextLabel")
