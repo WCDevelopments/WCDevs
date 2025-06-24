@@ -1110,4 +1110,4 @@ local function C_8d()
 end;
 task.spawn(C_8d);
 
-return NatUI["1"], require;
+return NatUI["1"];
