@@ -946,167 +946,191 @@ NatUI["8d"] = Instance.new("LocalScript", NatUI["1"]);
 
 -- StarterGui.UiLibrary.NathubUI.Holder.Topbar.Minimize.LocalScript
 local function C_21()
-	local script = NatUI["21"];
-	local Open = script.Parent.Parent.Parent.Parent.Parent.OpenButton
-	local Minim = script.Parent
-	local UI = script.Parent.Parent.Parent.Parent.Parent.NathubUI
-	local Holder = script.Parent.Parent.Parent.Parent.Parent.NathubUI.Holder
+    local script = NatUI["21"];
+    -- Wait for parents to exist
+    while not (script.Parent and script.Parent.Parent and script.Parent.Parent.Parent and script.Parent.Parent.Parent.Parent and script.Parent.Parent.Parent.Parent.Parent and script.Parent.Parent.Parent.Parent.Parent.OpenButton and script.Parent.Parent.Parent.Parent.Parent.NathubUI) do
+        task.wait()
+    end
+    local Open = script.Parent.Parent.Parent.Parent.Parent.OpenButton
+    local Minim = script.Parent
+    local UI = script.Parent.Parent.Parent.Parent.Parent.NathubUI
+    local Holder = script.Parent.Parent.Parent.Parent.Parent.NathubUI.Holder
 
-	Minim.MouseButton1Click:Connect(function()
-		Open:TweenSize(
-			UDim2.new(0, 130,0, 40),
-			Enum.EasingDirection.In, 
-			Enum.EasingStyle.Linear,
-			0.3
-		)
-		UI:TweenPosition(
-			UDim2.new(0, 1000,0, 1000),
-			Enum.EasingDirection.Out, 
-			Enum.EasingStyle.Linear,
-			0.2
-		)
+    Minim.MouseButton1Click:Connect(function()
+        Open:TweenSize(
+            UDim2.new(0, 130,0, 40),
+            Enum.EasingDirection.In, 
+            Enum.EasingStyle.Linear,
+            0.3
+        )
+        UI:TweenPosition(
+            UDim2.new(0, 1000,0, 1000),
+            Enum.EasingDirection.Out, 
+            Enum.EasingStyle.Linear,
+            0.2
+        )
 
-		wait(0)
-		Open.Visible = true
-		UI.Visible = false
-	end)
+        wait(0)
+        Open.Visible = true
+        UI.Visible = false
+    end)
 end;
 task.spawn(C_21);
+
 -- StarterGui.UiLibrary.NathubUI.Holder.Topbar.LocalScript
 local function C_24()
-	local script = NatUI["24"];
-	local UserInputService = game:GetService("UserInputService")
+    local script = NatUI["24"];
+    -- Wait for parents to exist
+    while not (script.Parent and script.Parent.Parent and script.Parent.Parent.Parent and script.Parent.Parent.Parent.Parent and script.Parent.Parent.Parent.Parent.NathubUI and script.Parent.Parent.Topbar) do
+        task.wait()
+    end
+    local UserInputService = game:GetService("UserInputService")
 
-	local gui = script.Parent.Parent.Parent.Parent.NathubUI
-	local topbar = script.Parent.Parent.Topbar
+    local gui = script.Parent.Parent.Parent.Parent.NathubUI
+    local topbar = script.Parent.Parent.Topbar
 
-	local dragging
-	local dragInput
-	local dragStart
-	local startPos
+    local dragging
+    local dragInput
+    local dragStart
+    local startPos
 
-	local function update(input)
-		local delta = input.Position - dragStart
-		gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-	end
+    local function update(input)
+        local delta = input.Position - dragStart
+        gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
 
-	topbar.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-			dragging = true
-			dragStart = input.Position
-			startPos = gui.Position
+    topbar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = gui.Position
 
-			input.Changed:Connect(function()
-				if input.UserInputState == Enum.UserInputState.End then
-					dragging = false
-				end
-			end)
-		end
-	end)
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
 
-	gui.InputChanged:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-			dragInput = input
-		end
-	end)
+    gui.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
 
-	UserInputService.InputChanged:Connect(function(input)
-		if input == dragInput and dragging then
-			update(input)
-		end
-	end)
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
 end;
 task.spawn(C_24);
+
 -- StarterGui.UiLibrary.OpenButton.LocalScript
 local function C_89()
-	local script = NatUI["89"];
-	local UserInputService = game:GetService("UserInputService")
+    local script = NatUI["89"];
+    -- Wait for parents to exist
+    while not (script.Parent and script.Parent.Parent and script.Parent.Parent.OpenButton) do
+        task.wait()
+    end
+    local UserInputService = game:GetService("UserInputService")
 
-	local gui = script.Parent.Parent.OpenButton
+    local gui = script.Parent.Parent.OpenButton
 
-	local dragging
-	local dragInput
-	local dragStart
-	local startPos
+    local dragging
+    local dragInput
+    local dragStart
+    local startPos
 
-	local function update(input)
-		local delta = input.Position - dragStart
-		gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-	end
+    local function update(input)
+        local delta = input.Position - dragStart
+        gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
 
-	gui.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-			dragging = true
-			dragStart = input.Position
-			startPos = gui.Position
+    gui.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = gui.Position
 
-			input.Changed:Connect(function()
-				if input.UserInputState == Enum.UserInputState.End then
-					dragging = false
-				end
-			end)
-		end
-	end)
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
 
-	gui.InputChanged:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-			dragInput = input
-		end
-	end)
+    gui.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
 
-	UserInputService.InputChanged:Connect(function(input)
-		if input == dragInput and dragging then
-			update(input)
-		end
-	end)
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
 end;
 task.spawn(C_89);
+
 -- StarterGui.UiLibrary.OpenButton.IconOpen.LocalScript
 local function C_8c()
-	local script = NatUI["8c"];
-	local Open = script.Parent
-	local Open2 = script.Parent.Parent.Parent.OpenButton
-	local UI = script.Parent.Parent.Parent.NathubUI
-	local Holder = script.Parent.Parent.Parent.NathubUI.Holder
+    local script = NatUI["8c"];
+    -- Wait for parents to exist
+    while not (script.Parent and script.Parent.Parent and script.Parent.Parent.Parent and script.Parent.Parent.Parent.OpenButton and script.Parent.Parent.Parent.NathubUI and script.Parent.Parent.Parent.NathubUI.Holder) do
+        task.wait()
+    end
+    local Open = script.Parent
+    local Open2 = script.Parent.Parent.Parent.OpenButton
+    local UI = script.Parent.Parent.Parent.NathubUI
+    local Holder = script.Parent.Parent.Parent.NathubUI.Holder
 
-	Open.MouseButton1Click:Connect(function()
-		Open2:TweenSize(
-			UDim2.new(0,0,0),
-			Enum.EasingDirection.Out, 
-			Enum.EasingStyle.Sine,
-			0.3
-		)
-		UI:TweenPosition(
-			UDim2.new(0.5, 0,0.5, 0),
-			Enum.EasingDirection.Out, 
-			Enum.EasingStyle.Linear,
-			0.2
-		)
-		wait(0)
-		Open2.Visible = false
-		UI.Visible = true
-	end)
+    Open.MouseButton1Click:Connect(function()
+        Open2:TweenSize(
+            UDim2.new(0,0,0),
+            Enum.EasingDirection.Out, 
+            Enum.EasingStyle.Sine,
+            0.3
+        )
+        UI:TweenPosition(
+            UDim2.new(0.5, 0,0.5, 0),
+            Enum.EasingDirection.Out, 
+            Enum.EasingStyle.Linear,
+            0.2
+        )
+        wait(0)
+        Open2.Visible = false
+        UI.Visible = true
+    end)
 end;
 task.spawn(C_8c);
+
 -- StarterGui.UiLibrary.LocalScript
 local function C_8d()
-	local script = NatUI["8d"];
-	local ItemContainer = script.Parent.NathubUI.Holder.ContainerTab.TabList.ScrollingFrame.Button
-	local Element = script.Parent.NathubUI.Holder.ContainerElement.Element
-	for i,v in pairs(ItemContainer:GetChildren()) do
-		if v.ClassName == "TextButton" then
-			v.MouseButton1Click:Connect(function()
-				for i,v2 in pairs(Element:GetChildren()) do
-					if v2.Name ~= v.Name then
-						v2.Visible = false
-					else
-						v2.Visible = true
-					end
-				end
+    local script = NatUI["8d"];
+    -- Wait for parents to exist
+    while not (script.Parent and script.Parent.NathubUI and script.Parent.NathubUI.Holder and script.Parent.NathubUI.Holder.ContainerTab and script.Parent.NathubUI.Holder.ContainerTab.TabList and script.Parent.NathubUI.Holder.ContainerTab.TabList.ScrollingFrame and script.Parent.NathubUI.Holder.ContainerTab.TabList.ScrollingFrame.Button and script.Parent.NathubUI.Holder.ContainerElement and script.Parent.NathubUI.Holder.ContainerElement.Element) do
+        task.wait()
+    end
+    local ItemContainer = script.Parent.NathubUI.Holder.ContainerTab.TabList.ScrollingFrame.Button
+    local Element = script.Parent.NathubUI.Holder.ContainerElement.Element
+    for i,v in pairs(ItemContainer:GetChildren()) do
+        if v.ClassName == "TextButton" then
+            v.MouseButton1Click:Connect(function()
+                for i,v2 in pairs(Element:GetChildren()) do
+                    if v2.Name ~= v.Name then
+                        v2.Visible = false
+                    else
+                        v2.Visible = true
+                    end
+                end
 
-			end)
-		end
-	end
+            end)
+        end
+    end
 end;
 task.spawn(C_8d);
 
