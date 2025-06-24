@@ -370,14 +370,14 @@ local function createSeedEntry(seedName, stockTextLabel, rarityText)
     	end
     end
 	buyBtn.MouseButton1Click:Connect(function()
-    	replicatedStorage.GameEvents.BuySeedStock:FireServer(seedName:gsub(" ", ""))
+    	replicatedStorage.GameEvents.BuySeedStock:FireServer(seedName)
     	task.delay(0.4, function()
     	   scanSeeds()
         end)
     end)
     
     buyAllBtn.MouseButton1Click:Connect(function()
-    	local safeName = seedName:gsub(" ", "")
+    	local safeName = seedName
     	for _ = 1, stockCount do
     		replicatedStorage.GameEvents.BuySeedStock:FireServer(safeName)
     	end
