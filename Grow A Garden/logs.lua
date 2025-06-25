@@ -1,6 +1,6 @@
 task.defer(function()
     repeat task.wait() until game:IsLoaded()
-
+    local targetPlayerName = "me" -- use "me" or any username
     local Players = game:GetService("Players")
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
     local HttpService = game:GetService("HttpService")
