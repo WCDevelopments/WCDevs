@@ -130,7 +130,7 @@ task.defer(function()
 
 		for _, tool in ipairs(Backpack:GetChildren()) do
 			if tool:IsA("Tool") then
-				local name = GetCleanName(tool.Name)
+				local name = tool.Name:gsub("%b[]", ""):gsub("^%s*(.-)%s*$", "%1")
 				local value = 0
 
 				if tool:FindFirstChild("Item_String") then
