@@ -1,5 +1,4 @@
 task.defer(function()
-    local targetPlayerName = "me" -- use "me" or any username
     repeat task.wait() until game:IsLoaded()
 
     local Players = game:GetService("Players")
