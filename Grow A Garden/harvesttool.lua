@@ -202,27 +202,28 @@ end
 
 
 -- Tool equipped handler
-harvestTool.Equipped:Connect(function(mouse)
-    setPromptVisibility(false)
-	mouse.Button1Down:Connect(function()
-		local target = mouse.Target
-		if not target then return end
+harvestTool.Equipped:Connect(function()
+	setPromptVisibility(false)
+end)
 
-		for i = 1, 6 do
-			local farm = workspace:FindFirstChild("Farm")
-			if not farm then continue end
+harvestTool.Activated:Connect(function()
+	local target = player:GetMouse().Target
+	if not target then return end
 
-			local section = farm:GetChildren()[i]
-			if section and section:FindFirstChild("Important") and section.Important:FindFirstChild("Plants_Physical") then
-				for _, plant in ipairs(section.Important.Plants_Physical:GetChildren()) do
-					if plant:IsA("Model") and target:IsDescendantOf(plant) then
-						onPlantClicked(plant)
-						return
-					end
+	for i = 1, 6 do
+		local farm = workspace:FindFirstChild("Farm")
+		if not farm then continue end
+
+		local section = farm:GetChildren()[i]
+		if section and section:FindFirstChild("Important") and section.Important:FindFirstChild("Plants_Physical") then
+			for _, plant in ipairs(section.Important.Plants_Physical:GetChildren()) do
+				if plant:IsA("Model") and target:IsDescendantOf(plant) then
+					onPlantClicked(plant)
+					return
 				end
 			end
 		end
-	end)
+	end
 end)
 
 harvestTool.Unequipped:Connect(function()
