@@ -253,10 +253,11 @@ function _G.Window(text,logo)
 	MainSceen.Parent = AlchemyUIXZ
 	MainSceen.Active = true
 	MainSceen.AnchorPoint = Vector2.new(0.5, 0.5)
+MainSceen.AutomaticSize = Enum.AutomaticSize.None
 	MainSceen.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 	MainSceen.BorderColor3 = Color3.fromRGB(10, 10, 10)
-	MainSceen.Position = UDim2.new(0.483071834, 0, 0.437730134, 0)
-	MainSceen.Size = UDim2.new(0, 553, 0, 466)
+	MainSceen.Position = UDim2.new(0.5, 0, 0.5, 0)  -- Centered
+	MainSceen.Size = UDim2.new(0.4, 0, 0.6, 0)  -- Resizable modern size
 	MainSceen.ClipsDescendants = true
 
 	local Main_UiConner = Instance.new("UICorner")
