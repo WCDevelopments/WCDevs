@@ -293,6 +293,65 @@ MainSceen.AutomaticSize = Enum.AutomaticSize.None
 	NameReal.TextWrapped = true
 	NameReal.TextXAlignment = Enum.TextXAlignment.Left
 
+	-- Resize from bottom-right corner
+	local ResizeHandle = Instance.new("Frame")
+	ResizeHandle.Name = "ResizeHandle"
+	ResizeHandle.Parent = MainSceen
+	ResizeHandle.Size = UDim2.new(0, 20, 0, 20)
+	ResizeHandle.Position = UDim2.new(1, -20, 1, -20)
+	ResizeHandle.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+	ResizeHandle.BorderSizePixel = 0
+	ResizeHandle.ZIndex = 10
+	ResizeHandle.Active = true
+	
+	ResizeHandle.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+			local startSize = MainSceen.Size
+			local startPos = Vector2.new(mouse.X, mouse.Y)
+			local conn
+			conn = game:GetService("RunService").RenderStepped:Connect(function()
+				local delta = Vector2.new(mouse.X, mouse.Y) - startPos
+				MainSceen.Size = UDim2.new(startSize.X.Scale, startSize.X.Offset + delta.X, startSize.Y.Scale, startSize.Y.Offset + delta.Y)
+			end)
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					conn:Disconnect()
+				end
+			end)
+		end
+	end)
+
+	-- Night/Light mode toggle
+	local ThemeButton = Instance.new("TextButton")
+	ThemeButton.Name = "ThemeToggle"
+	ThemeButton.Parent = MainSceen
+	ThemeButton.Size = UDim2.new(0, 100, 0, 25)
+	ThemeButton.Position = UDim2.new(0, 10, 1, -35)
+	ThemeButton.Text = "🌙 Night Mode"
+	ThemeButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	ThemeButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+	ThemeButton.Font = Enum.Font.GothamSemibold
+	ThemeButton.TextSize = 13
+	ThemeButton.ZIndex = 10
+	
+	local isDark = false
+	ThemeButton.MouseButton1Click:Connect(function()
+		isDark = not isDark
+		if isDark then
+			ThemeButton.Text = "☀️ Light Mode"
+			ThemeButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+			ThemeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+			MainSceen.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+		else
+			ThemeButton.Text = "🌙 Night Mode"
+			ThemeButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			ThemeButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+			MainSceen.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		end
+	end)
+
+
 	local NotiFrame = Instance.new("Frame")
 	NotiFrame.Name = "NotiFrame"
 	NotiFrame.Parent = AlchemyUIXZ
