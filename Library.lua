@@ -293,35 +293,41 @@ MainSceen.AutomaticSize = Enum.AutomaticSize.None
 	NameReal.TextWrapped = true
 	NameReal.TextXAlignment = Enum.TextXAlignment.Left
 
-	-- Resize Handle
-	local ResizeHandle = Instance.new("Frame")
-	ResizeHandle.Name = "ResizeHandle"
-	ResizeHandle.Parent = MainSceen
-	ResizeHandle.Size = UDim2.new(0, 20, 0, 20)
-	ResizeHandle.AnchorPoint = Vector2.new(1, 1)
-	ResizeHandle.Position = UDim2.new(1, -4, 1, -4)
-	ResizeHandle.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
-	ResizeHandle.BorderSizePixel = 0
-	ResizeHandle.ZIndex = 10
-	ResizeHandle.Active = true
+	-- Resizable from bottom-right (invisible but functional)
+	local ResizeArea = Instance.new("TextButton")
+	ResizeArea.Name = "ResizeArea"
+	ResizeArea.Parent = MainSceen
+	ResizeArea.AnchorPoint = Vector2.new(1, 1)
+	ResizeArea.Position = UDim2.new(1, 0, 1, 0)
+	ResizeArea.Size = UDim2.new(0, 30, 0, 30) -- increase area for usability
+	ResizeArea.BackgroundTransparency = 1 -- invisible
+	ResizeArea.BorderSizePixel = 0
+	ResizeArea.AutoButtonColor = false
+	ResizeArea.Text = ""
+	ResizeArea.ZIndex = 100
+	ResizeArea.Active = true
 	
-	-- Resize logic
-	ResizeHandle.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			local mouse = game:GetService("Players").LocalPlayer:GetMouse()
-			local startSize = MainSceen.Size
-			local startPos = Vector2.new(mouse.X, mouse.Y)
-			local conn
-			conn = game:GetService("RunService").RenderStepped:Connect(function()
-				local delta = Vector2.new(mouse.X, mouse.Y) - startPos
-				MainSceen.Size = UDim2.new(startSize.X.Scale, startSize.X.Offset + delta.X, startSize.Y.Scale, startSize.Y.Offset + delta.Y)
-			end)
-			input.Changed:Connect(function()
-				if input.UserInputState == Enum.UserInputState.End then
-					conn:Disconnect()
-				end
-			end)
-		end
+	ResizeArea.MouseButton1Down:Connect(function()
+		local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+		local startSize = MainSceen.Size
+		local startPos = Vector2.new(mouse.X, mouse.Y)
+	
+		local connection
+		connection = game:GetService("RunService").RenderStepped:Connect(function()
+			local delta = Vector2.new(mouse.X, mouse.Y) - startPos
+			MainSceen.Size = UDim2.new(
+				startSize.X.Scale, math.max(200, startSize.X.Offset + delta.X),
+				startSize.Y.Scale, math.max(200, startSize.Y.Offset + delta.Y)
+			)
+		end)
+	
+		local inputEnded
+		inputEnded = game:GetService("UserInputService").InputEnded:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 then
+				connection:Disconnect()
+				inputEnded:Disconnect()
+			end
+		end)
 	end)
 	
 	-- Theme Toggle Button (BOTTOM LEFT)
@@ -745,7 +751,7 @@ MainSceen.AutomaticSize = Enum.AutomaticSize.None
 		Frame_Tap.Active = true
 		Frame_Tap.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		Frame_Tap.BackgroundTransparency = 1.000
-		Frame_Tap.Size = UDim2.new(0, 70, 0, 24)
+		Frame_Tap.Size = UDim2.new(0, 90, 0, 24)
 
 		local TextButton_Tap = Instance.new("TextButton")
 
@@ -754,7 +760,7 @@ MainSceen.AutomaticSize = Enum.AutomaticSize.None
 		TextButton_Tap.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		TextButton_Tap.BackgroundTransparency = 1.000
 		TextButton_Tap.Position = UDim2.new(0.114666745, 0, 0.100000381, 0)
-		TextButton_Tap.Size = UDim2.new(0, 66, 0, 20)
+		TextButton_Tap.Size = UDim2.new(1, -4, 1, -4)
 		TextButton_Tap.Font = Enum.Font.Gotham
 		TextButton_Tap.Text = tostring(text)
 		TextButton_Tap.TextColor3 = Color3.fromRGB(255,255,255)
@@ -771,7 +777,7 @@ MainSceen.AutomaticSize = Enum.AutomaticSize.None
 		TextButton_Label.BackgroundColor3 = Color3.fromRGB(0, 194, 135)
 		TextButton_Label.BorderSizePixel = 0
 		TextButton_Label.Position = UDim2.new(-0.02, 0, 0.481999993, 0)
-		TextButton_Label.Size = UDim2.new(0, 0, 0, 0)
+		TextButton_Tap.Size = UDim2.new(1, -4, 1, -4)
 		TextButton_Label.Font = Enum.Font.SourceSans
 		TextButton_Label.Text = ""
 		TextButton_Label.TextColor3 = Color3.fromRGB(0, 0, 0)
@@ -802,7 +808,7 @@ MainSceen.AutomaticSize = Enum.AutomaticSize.None
 		MainPage.BorderSizePixel = 0
 		MainPage.ClipsDescendants = true
 		MainPage.Position = UDim2.new(0, 0, -0.00133538188, 0)
-		MainPage.Size = UDim2.new(0, 439, 0, 417)
+		MainPage.Size = UDim2.new(1, -10, 1, -10)
 
 		MainPage.LayoutOrder = PageOrders
 
@@ -892,7 +898,7 @@ MainSceen.AutomaticSize = Enum.AutomaticSize.None
 			Pageframe.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 			Pageframe.BackgroundTransparency = 1.000
 			Pageframe.BorderSizePixel = 0
-			Pageframe.Size = UDim2.new(0, 435, 0, 395)
+			Pageframe.Size = UDim2.new(1, -10, 1, -10)
 
 			local UICorner_3 = Instance.new("UICorner")
 
@@ -917,7 +923,7 @@ MainSceen.AutomaticSize = Enum.AutomaticSize.None
 			ScrollingFrame_Pageframe.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 			ScrollingFrame_Pageframe.BackgroundTransparency = 1.000
 			ScrollingFrame_Pageframe.BorderSizePixel = 0
-			ScrollingFrame_Pageframe.Size = UDim2.new(0, 421, 0, 379)
+			ScrollingFrame_Pageframe.Size = UDim2.new(1, -20, 1, -40)
 			ScrollingFrame_Pageframe.ScrollBarThickness = 3
 
 			local ScrollingFrame_PageframeUIListLayout = Instance.new("UIListLayout")
@@ -995,7 +1001,7 @@ MainSceen.AutomaticSize = Enum.AutomaticSize.None
 				ButtonMain.BorderSizePixel = 0
 				ButtonMain.AnchorPoint = Vector2.new(0.5, 0.5)
 				ButtonMain.Position = UDim2.new(0.5, 0, 0.5, 0)
-				ButtonMain.Size = UDim2.new(0, 397, 0, 27)
+				ButtonMain.Size = UDim2.new(1, -10, 0, 27)
 				ButtonMain.AutoButtonColor = false
 				ButtonMain.Font = Enum.Font.GothamSemibold
 				ButtonMain.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -1126,7 +1132,7 @@ MainSceen.AutomaticSize = Enum.AutomaticSize.None
 				TextToggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 				TextToggle.BackgroundTransparency = 1.000
 				TextToggle.Position = UDim2.new(3.91000009, 0, 0.5, 0)
-				TextToggle.Size = UDim2.new(0, 291, 0, 41)
+				TextToggle.Size = UDim2.new(1, -100, 0, 41)
 				TextToggle.Font = Enum.Font.GothamSemibold
 				TextToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
 				TextToggle.Text = tostring(text)
