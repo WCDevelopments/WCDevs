@@ -293,17 +293,19 @@ MainSceen.AutomaticSize = Enum.AutomaticSize.None
 	NameReal.TextWrapped = true
 	NameReal.TextXAlignment = Enum.TextXAlignment.Left
 
-	-- Resize from bottom-right corner
+	-- Resize Handle
 	local ResizeHandle = Instance.new("Frame")
 	ResizeHandle.Name = "ResizeHandle"
 	ResizeHandle.Parent = MainSceen
 	ResizeHandle.Size = UDim2.new(0, 20, 0, 20)
-	ResizeHandle.Position = UDim2.new(1, -20, 1, -20)
+	ResizeHandle.AnchorPoint = Vector2.new(1, 1)
+	ResizeHandle.Position = UDim2.new(1, -4, 1, -4)
 	ResizeHandle.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
 	ResizeHandle.BorderSizePixel = 0
 	ResizeHandle.ZIndex = 10
 	ResizeHandle.Active = true
 	
+	-- Resize logic
 	ResizeHandle.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
 			local mouse = game:GetService("Players").LocalPlayer:GetMouse()
@@ -321,32 +323,29 @@ MainSceen.AutomaticSize = Enum.AutomaticSize.None
 			end)
 		end
 	end)
-
-	-- Night/Light mode toggle
+	
+	-- Theme Toggle Button (BOTTOM LEFT)
 	local ThemeButton = Instance.new("TextButton")
 	ThemeButton.Name = "ThemeToggle"
 	ThemeButton.Parent = MainSceen
-	ThemeButton.Size = UDim2.new(0, 100, 0, 25)
-	ThemeButton.Position = UDim2.new(0, 10, 1, -35)
-	ThemeButton.Text = "🌙 Night Mode"
-	ThemeButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	ThemeButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+	ThemeButton.Size = UDim2.new(0, 110, 0, 28)
+	ThemeButton.AnchorPoint = Vector2.new(0, 1)
+	ThemeButton.Position = UDim2.new(0, 10, 1, -10)
+	ThemeButton.Text = "🌙 Light Mode"
+	ThemeButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	ThemeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 	ThemeButton.Font = Enum.Font.GothamSemibold
 	ThemeButton.TextSize = 13
-	ThemeButton.ZIndex = 10
+	ThemeButton.ZIndex = 5
 	
-	local isDark = false
+	local isDark = true
 	ThemeButton.MouseButton1Click:Connect(function()
 		isDark = not isDark
 		if isDark then
-			ThemeButton.Text = "☀️ Light Mode"
-			ThemeButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-			ThemeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+			ThemeButton.Text = "🌙 Light Mode"
 			MainSceen.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 		else
-			ThemeButton.Text = "🌙 Night Mode"
-			ThemeButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			ThemeButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+			ThemeButton.Text = "☀️ Dark Mode"
 			MainSceen.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		end
 	end)
