@@ -1,2 +1,0 @@
--- Obfuscated Script
-bG9hZHN0cmluZyhnYW1lOkh0dHBHZXQoImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9FZmUwNjI2L1JhaXRvSHViL3JlZnMvaGVhZHMvbWFpbi9TY3JpcHQiKSkoKQ==
