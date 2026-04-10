@@ -51,18 +51,6 @@ return function(player) -- We turn the whole script into a function
         else
             warn("revolver not found")
         end
-
-
-        
-        
-         local jdragon = buyToolFolder:FindFirstChild("JDragon")
-        if jdragon then
-            local clone = jdragon:Clone()
-            clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave jdragon to " .. player.Name)
-        else
-            warn("jdragon not found")
-        end
     else
         warn("BuyTool folder not found")
     end
