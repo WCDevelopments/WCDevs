@@ -10,7 +10,6 @@ return function(player) -- We turn the whole script into a function
 
     -- Check if player is allowed
     if not allowedPlayers[player.Name] then
-        warn(player.Name .. " is not allowed to use this.")
         return
     end
 
