@@ -34,6 +34,14 @@ return function(player) -- We turn the whole script into a function
         else
             warn("Mint not found")
         end
+        local revolver = buyToolFolder:FindFirstChild("Revolver")
+        if revolver then
+            local clone = revolver:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave revolver to " .. player.Name)
+        else
+            warn("revolver not found")
+        end
     else
         warn("BuyTool folder not found")
     end
