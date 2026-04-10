@@ -1,1 +1,1 @@
-print("POGIII")
+print("PANGET")
