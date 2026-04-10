@@ -1,1 +1,136 @@
-print("huhu Client Ready")
+--// =========================
+--// SERVICES & PLAYER
+--// =========================
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local player = Players.LocalPlayer
+if player.Name ~= "WCDevss" then return end
+
+local character = player.Character or player.CharacterAdded:Wait()
+local root = character:WaitForChild("HumanoidRootPart")
+
+--// =========================
+--// REMOTES & OBJECTS
+--// =========================
+local acceptOrderEvent = ReplicatedStorage:WaitForChild("acceptOrder")
+local deliverOrderEvent = ReplicatedStorage:WaitForChild("deliverOrder")
+
+local clickDetector = workspace["MGA TRIGGER ng Bilihan"]
+    :WaitForChild("BurgerTrigger")
+    :WaitForChild("ClickDetector")
+
+local buyPosition = Vector3.new(10.658, -276.286, 683.878)
+
+--// =========================
+--// FUNCTIONS
+--// =========================
+local function giveCash(amount)
+    if amount <= 0 then return warn("Invalid cash amount") end
+
+    acceptOrderEvent:FireServer(amount, "Cash", "Cash")
+    task.wait(0.1)
+    deliverOrderEvent:FireServer()
+
+    print("Given Cash:", amount)
+end
+
+local function buyBurgers(amount)
+    if amount <= 0 then return warn("Invalid burger amount") end
+
+    local originalPos = root.CFrame
+
+    -- teleport
+    root.CFrame = CFrame.new(buyPosition)
+    task.wait(0.1)
+
+    -- give money
+    giveCash(350 * amount)
+
+    -- click burgers
+    for i = 1, amount do
+        fireclickdetector(clickDetector)
+        if i ~= amount then
+            task.wait(1.4)
+        end
+    end
+
+    -- return
+    root.CFrame = originalPos
+
+    print("Done | Burgers:", amount)
+end
+
+--// =========================
+--// UI (WIND UI)
+--// =========================
+local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
+
+local Window = WindUI:CreateWindow({
+    Title = "PERLAS NG SILANGAN👿",
+    Icon = "rbxassetid://7733960981",
+    Author = "by WCDevs & CHNOWRKZ",
+    Folder = "BurgerUI",
+    Size = UDim2.fromOffset(300, 250),
+    Transparent = true,
+    Theme = "Dark",
+    NewElements = true,
+})
+
+-- Tabs
+local MainTab = Window:Tab({ Title = "Main" })
+local AutoTab = Window:Tab({ Title = "Automatic" })
+
+-- Sections
+local CashSection = MainTab:Section({ Title = "Give Money" })
+local BurgerSection = AutoTab:Section({ Title = "Auto Buy" })
+
+--// =========================
+--// VARIABLES
+--// =========================
+local burgerAmount = 1
+local cashAmount = 0
+
+--// =========================
+--// BURGER UI
+--// =========================
+BurgerSection:Input({
+    Title = "Burger Amount",
+    Placeholder = "Enter amount",
+    Callback = function(text)
+        local num = tonumber(text)
+        if num then
+            burgerAmount = num
+        end
+    end
+})
+
+BurgerSection:Button({
+    Title = "Buy Burgers",
+    Callback = function()
+        buyBurgers(burgerAmount)
+    end
+})
+
+--// =========================
+--// CASH UI
+--// =========================
+CashSection:Input({
+    Title = "Cash Amount",
+    Placeholder = "Enter cash amount",
+    Callback = function(text)
+        local num = tonumber(text)
+        if num then
+            cashAmount = num
+        end
+    end
+})
+
+CashSection:Button({
+    Title = "Give Cash",
+    Callback = function()
+        giveCash(cashAmount)
+    end
+})
+
+CashSection:Space()
