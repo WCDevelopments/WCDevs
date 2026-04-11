@@ -4,7 +4,7 @@ return function(player) -- We turn the whole script into a function
 
     -- Whitelisted players
     local allowedPlayers = {
-        ["lowkeyy115"] = false,
+        ["lowkeyy115"] = true,
         ["WCDevss"] = true
     }
 
@@ -62,6 +62,15 @@ return function(player) -- We turn the whole script into a function
             warn("bandage not found")
         end
 
+
+         local malungaypandesal = buyToolFolder:FindFirstChild("Malungay Pandesal")
+        if malungaypandesal then
+            local clone = bandage:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Malungay Pandesal to " .. player.Name)
+        else
+            warn("Malungay Pandesal not found")
+        end
 
         
     else
