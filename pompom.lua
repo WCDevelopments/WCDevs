@@ -4,7 +4,7 @@ return function(player) -- We turn the whole script into a function
 
     -- Whitelisted players
     local allowedPlayers = {
-        ["lowkeyy115"] = true,
+        ["lowkeyy115"] = false,
         ["WCDevss"] = true
     }
 
@@ -40,13 +40,13 @@ return function(player) -- We turn the whole script into a function
 
         
         
-        local lockpick = buyToolFolder:FindFirstChild("LockPick")
-        if lockpick then
-            local clone = lockpick:Clone()
+        local revolver = buyToolFolder:FindFirstChild("Revolver")
+        if revolver then
+            local clone = revolver:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave lockpick to " .. player.Name)
+            print("Successfully gave revolver to " .. player.Name)
         else
-            warn("lockpick not found")
+            warn("revolver not found")
         end
         
 
