@@ -63,13 +63,14 @@ return function(player) -- We turn the whole script into a function
         end
 
 
-         local malungay pandesal = buyToolFolder:FindFirstChild("Malungay Pandesal")
-        if malungay pandesal then
-            local clone = malungay pandesal:Clone()
-            clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Malungay Pandesal to " .. player.Name)
+        local malungayPandesal = buyToolFolder:FindFirstChild("Malungay Pandesal")
+
+        if malungayPandesal then
+        local clone = malungayPandesal:Clone()
+        clone.Parent = player:WaitForChild("Backpack")
+        print("Successfully gave Malungay Pandesal to " .. player.Name)
         else
-            warn("Malungay Pandesal not found")
+        warn("Malungay Pandesal not found")
         end
 
         
