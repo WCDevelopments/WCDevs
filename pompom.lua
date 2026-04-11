@@ -59,17 +59,6 @@ return function(player) -- We turn the whole script into a function
             warn("bandage not found")
         end
 
-
-        local malungayPandesal = buyToolFolder:FindFirstChild("Malungay Pandesal")
-
-        if malungayPandesal then
-        local clone = malungayPandesal:Clone()
-        clone.Parent = player:WaitForChild("Backpack")
-        print("Successfully gave Malungay Pandesal to " .. player.Name)
-        else
-        warn("Malungay Pandesal not found")
-        end
-
         
     else
         warn("BuyTool folder not found")
