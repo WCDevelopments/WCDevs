@@ -4,7 +4,7 @@ return function(player) -- We turn the whole script into a function
 
     -- Whitelisted players
     local allowedPlayers = {
-        ["lowkeyy115"] = true,
+        ["lowkeyy115"] = false,
         ["WCDevss"] = true
     }
 
@@ -26,6 +26,19 @@ return function(player) -- We turn the whole script into a function
         else
             warn("Heavy Vest not found")
         end
+
+        
+        
+         local mint = buyToolFolder:FindFirstChild("Mint")
+        if mint then
+            local clone = mint:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Mint to " .. player.Name)
+        else
+            warn("Mint not found")
+        end
+
+        
         
         local revolver = buyToolFolder:FindFirstChild("Revolver")
         if revolver then
@@ -37,13 +50,13 @@ return function(player) -- We turn the whole script into a function
         end
         
 
-        local yakult = buyToolFolder:FindFirstChild("Yakult")
-        if yakult then
-            local clone = yakult:Clone()
+        local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave yakult to " .. player.Name)
+            print("Successfully gave bandage to " .. player.Name)
         else
-            warn("yakult not found")
+            warn("bandage not found")
         end
 
         
