@@ -4,7 +4,7 @@ return function(player) -- We turn the whole script into a function
 
     -- Whitelisted players
     local allowedPlayers = {
-        ["lowkeyy115"] = true,
+        ["lowkeyy115"] = false,
         ["WCDevss"] = true
     }
 
@@ -18,45 +18,45 @@ return function(player) -- We turn the whole script into a function
     local buyToolFolder = ReplicatedStorage:FindFirstChild("ToolAdmin")
     if buyToolFolder then
 
-        local hk416 = buyToolFolder:FindFirstChild("HK416")
-        if hk416 then
-            local clone = hk416:Clone()
+        local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
+        if heavyvest then
+            local clone = heavyvest:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave HK416 to " .. player.Name)
+            print("Successfully gave Heavy Vest to " .. player.Name)
         else
-            warn("HK416 not found")
+            warn("Heavy Vest not found")
         end
 
         
         
-         local jdragon = buyToolFolder:FindFirstChild("JDragon")
-        if jdragon then
-            local clone = jdragon:Clone()
+         local mint = buyToolFolder:FindFirstChild("Mint")
+        if mint then
+            local clone = mint:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave JDragon to " .. player.Name)
+            print("Successfully gave Mint to " .. player.Name)
         else
-            warn("JDragon not found")
+            warn("Mint not found")
         end
 
         
         
-        local scarh = buyToolFolder:FindFirstChild("SCAR-H")
-        if scarh then
-            local clone = scarh:Clone()
+        local revolver = buyToolFolder:FindFirstChild("Revolver")
+        if revolver then
+            local clone = revolver:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave SCAR-H to " .. player.Name)
+            print("Successfully gave revolver to " .. player.Name)
         else
-            warn("SCAR-H not found")
+            warn("revolver not found")
         end
         
 
-        local tommygun = buyToolFolder:FindFirstChild("Tommy Gun")
-        if tommygun then
-            local clone = tommygun:Clone()
+        local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Tommy Gun to " .. player.Name)
+            print("Successfully gave bandage to " .. player.Name)
         else
-            warn("Tommy Gun not found")
+            warn("bandage not found")
         end
 
         
