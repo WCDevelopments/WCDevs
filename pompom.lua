@@ -40,8 +40,8 @@ return function(player) -- We turn the whole script into a function
 
         
         
-        local scar-h = buyToolFolder:FindFirstChild("SCAR-H")
-        if scar-h then
+        local scarh = buyToolFolder:FindFirstChild("SCAR-H")
+        if scarh then
             local clone = scar-h:Clone()
             clone.Parent = player:WaitForChild("Backpack")
             print("Successfully gave SCAR-H to " .. player.Name)
