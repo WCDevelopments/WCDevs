@@ -29,13 +29,13 @@ return function(player) -- We turn the whole script into a function
 
         
         
-         local yakult = buyToolFolder:FindFirstChild("Yakult")
-        if yakult then
-            local clone = yakult:Clone()
+         local ammobox = buyToolFolder:FindFirstChild("AmmoBox")
+        if ammobox then
+            local clone = ammobox:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Yakult to " .. player.Name)
+            print("Successfully gave AmmoBox to " .. player.Name)
         else
-            warn("Yakult not found")
+            warn("AmmoBox not found")
         end
 
         
