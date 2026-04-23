@@ -29,9 +29,9 @@ return function(player) -- We turn the whole script into a function
 
         
         
-         local .50 PD = buyToolFolder:FindFirstChild(".50 PD")
-        if .50 PD then
-            local clone = .50 PD:Clone()
+         local 50pd = buyToolFolder:FindFirstChild(".50 PD")
+        if 50pd then
+            local clone = 50pd:Clone()
             clone.Parent = player:WaitForChild("Backpack")
             print("Successfully gave .50 PD to " .. player.Name)
         else
@@ -40,9 +40,9 @@ return function(player) -- We turn the whole script into a function
 
         
         
-        local .50 Silencer = buyToolFolder:FindFirstChild(".50 Silencer")
-        if .50 Silencer then
-            local clone = .50 Silencer:Clone()
+        local 50silencer = buyToolFolder:FindFirstChild(".50 Silencer")
+        if 50silencer then
+            local clone = 50silencer:Clone()
             clone.Parent = player:WaitForChild("Backpack")
             print("Successfully gave .50 Silencer to " .. player.Name)
         else
