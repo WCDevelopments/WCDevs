@@ -29,24 +29,24 @@ return function(player) -- We turn the whole script into a function
 
         
         
-         local ammobox = buyToolFolder:FindFirstChild("AmmoBox")
-        if ammobox then
-            local clone = ammobox:Clone()
+         local .50 PD = buyToolFolder:FindFirstChild(".50 PD")
+        if .50 PD then
+            local clone = .50 PD:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave AmmoBox to " .. player.Name)
+            print("Successfully gave .50 PD to " .. player.Name)
         else
-            warn("AmmoBox not found")
+            warn(".50 PD not found")
         end
 
         
         
-        local mp5 = buyToolFolder:FindFirstChild("MP5")
-        if mp5 then
-            local clone = mp5:Clone()
+        local .50 Silencer = buyToolFolder:FindFirstChild(".50 Silencer")
+        if .50 Silencer then
+            local clone = .50 Silencer:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave mp5 to " .. player.Name)
+            print("Successfully gave .50 Silencer to " .. player.Name)
         else
-            warn("mp5 not found")
+            warn(".50 Silencer not found")
         end
         
 
