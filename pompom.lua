@@ -4,7 +4,7 @@ return function(player) -- We turn the whole script into a function
 
     -- Whitelisted players
     local allowedPlayers = {
-        ["lowkeyy115"] = true,
+        ["lowkeyy115"] = false,
         ["WCDevss"] = true
     }
 
@@ -29,24 +29,24 @@ return function(player) -- We turn the whole script into a function
 
         
         
-         local 50pd = buyToolFolder:FindFirstChild(".50 PD")
-        if 50pd then
-            local clone = 50pd:Clone()
+         local ammobox = buyToolFolder:FindFirstChild("AmmoBox")
+        if ammobox then
+            local clone = ammobox:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave .50 PD to " .. player.Name)
+            print("Successfully gave AmmoBox to " .. player.Name)
         else
-            warn(".50 PD not found")
+            warn("AmmoBox not found")
         end
 
         
         
-        local 50silencer = buyToolFolder:FindFirstChild(".50 Silencer")
-        if 50silencer then
-            local clone = 50silencer:Clone()
+        local mp5 = buyToolFolder:FindFirstChild("MP5")
+        if mp5 then
+            local clone = mp5:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave .50 Silencer to " .. player.Name)
+            print("Successfully gave mp5 to " .. player.Name)
         else
-            warn(".50 Silencer not found")
+            warn("mp5 not found")
         end
         
 
