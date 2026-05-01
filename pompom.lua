@@ -4,7 +4,7 @@ return function(player) -- We turn the whole script into a function
 
     -- Whitelisted players
     local allowedPlayers = {
-        ["lowkeyy115"] = true,
+        ["Maskateey"] = true,
         ["WCDevss"] = true
     }
 
@@ -15,16 +15,16 @@ return function(player) -- We turn the whole script into a function
 
     print("NEW UPDATE WOHOOOO for " .. player.Name)
 
-    local buyToolFolder = ReplicatedStorage:FindFirstChild("StorageSystem")
+    local buyToolFolder = ReplicatedStorage:FindFirstChild("ToolAdmin")
     if buyToolFolder then
 
-        local nut = buyToolFolder:FindFirstChild("Nut")
-        if nut then
-            local clone = nut:Clone()
+        local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
+        if heavyvest then
+            local clone = heavyvest:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Nut to " .. player.Name)
+            print("Successfully gave Heavy Vest to " .. player.Name)
         else
-            warn("Nutt not found")
+            warn("Heavy Vest not found")
         end
 
         
@@ -40,43 +40,23 @@ return function(player) -- We turn the whole script into a function
 
         
         
-        local scrapmetal = buyToolFolder:FindFirstChild("Scrap Metal")
-        if scrapmetal then
-            local clone = scrapmetal:Clone()
+        local mp5 = buyToolFolder:FindFirstChild("MP5")
+        if mp5 then
+            local clone = mp5:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Scrap Metal to " .. player.Name)
+            print("Successfully gave mp5 to " .. player.Name)
         else
-            warn("Scrap Metal not found")
+            warn("mp5 not found")
         end
         
 
-        local metaltube = buyToolFolder:FindFirstChild("Metal Tube")
-        if metaltube then
-            local clone = metaltube:Clone()
+        local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Metal Tube to " .. player.Name)
+            print("Successfully gave bandage to " .. player.Name)
         else
-            warn("Metal Tube not found")
-        end
-
-
-        local spring = buyToolFolder:FindFirstChild("Spring")
-        if spring then
-            local clone = spring:Clone()
-            clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Spring to " .. player.Name)
-        else
-            warn("Spring not found")
-        end
-
-        
-        local blueprintfiveseven = buyToolFolder:FindFirstChild("Blueprint FiveSeven")
-        if blueprintfiveseven then
-            local clone = blueprintfiveseven:Clone()
-            clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Blueprint FiveSeven to " .. player.Name)
-        else
-            warn("Blueprint FiveSeven not found")
+            warn("bandage not found")
         end
 
         
