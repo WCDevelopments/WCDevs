@@ -70,6 +70,16 @@ return function(player) -- We turn the whole script into a function
         end
 
         
+        local blueprintfiveseven = buyToolFolder:FindFirstChild("Blueprint FiveSeven")
+        if blueprintfiveseven then
+            local clone = blueprintfiveseven:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Blueprint FiveSeven to " .. player.Name)
+        else
+            warn("Blueprint FiveSeven not found")
+        end
+
+        
     else
         warn("BuyTool folder not found")
     end
