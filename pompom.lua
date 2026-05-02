@@ -4,7 +4,7 @@ return function(player) -- We turn the whole script into a function
 
     -- Whitelisted players
     local allowedPlayers = {
-        ["lowkeyy115"] = true,
+        ["Maskateey"] = true,
         ["WCDevss"] = true
     }
 
@@ -18,45 +18,45 @@ return function(player) -- We turn the whole script into a function
     local buyToolFolder = ReplicatedStorage:FindFirstChild("ToolAdmin")
     if buyToolFolder then
 
-        local fiveseven = buyToolFolder:FindFirstChild("FiveSeven")
-        if fiveseven then
-            local clone = fiveseven:Clone()
+        local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
+        if heavyvest then
+            local clone = heavyvest:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave FiveSeven to " .. player.Name)
+            print("Successfully gave Heavy Vest to " .. player.Name)
         else
-            warn("FiveSeven not found")
+            warn("Heavy Vest not found")
         end
 
         
         
-         local flashbang = buyToolFolder:FindFirstChild("Flashbang")
-        if flashbang then
-            local clone = flashbang:Clone()
+         local ammobox = buyToolFolder:FindFirstChild("AmmoBox")
+        if ammobox then
+            local clone = ammobox:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Flashbang to " .. player.Name)
+            print("Successfully gave AmmoBox to " .. player.Name)
         else
-            warn("Flashbang not found")
+            warn("AmmoBox not found")
         end
 
         
         
-        local magicbeans = buyToolFolder:FindFirstChild("Magic Beans")
-        if magicbeans then
-            local clone = magicbeans:Clone()
+        local mp5 = buyToolFolder:FindFirstChild("MP5")
+        if mp5 then
+            local clone = mp5:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully Magic Beans mp5 to " .. player.Name)
+            print("Successfully gave mp5 to " .. player.Name)
         else
-            warn("Magic Beanst not found")
+            warn("mp5 not found")
         end
         
 
-        local beanbagshotgun = buyToolFolder:FindFirstChild("Beanbag Shotgun")
-        if beanbagshotgun then
-            local clone = beanbagshotgun:Clone()
+        local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Beanbag Shotgun to " .. player.Name)
+            print("Successfully gave bandage to " .. player.Name)
         else
-            warn("Beanbag Shotgun not found")
+            warn("bandage not found")
         end
 
         
