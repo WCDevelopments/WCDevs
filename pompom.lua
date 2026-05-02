@@ -18,13 +18,13 @@ return function(player) -- We turn the whole script into a function
     local buyToolFolder = ReplicatedStorage:FindFirstChild("ToolAdmin")
     if buyToolFolder then
 
-        local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
-        if heavyvest then
-            local clone = heavyvest:Clone()
+        local fiveseven = buyToolFolder:FindFirstChild("FiveSeven")
+        if fiveseven then
+            local clone = fiveseven:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Heavy Vest to " .. player.Name)
+            print("Successfully gave FiveSeven to " .. player.Name)
         else
-            warn("Heavy Vest not found")
+            warn("FiveSeven not found")
         end
 
         
@@ -40,13 +40,13 @@ return function(player) -- We turn the whole script into a function
 
         
         
-        local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
-        if heavyvest then
-            local clone = heavyvest:Clone()
+        local magicbeans = buyToolFolder:FindFirstChild("Magic Beans")
+        if magicbeans then
+            local clone = magicbeans:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully Heavy Vest mp5 to " .. player.Name)
+            print("Successfully Magic Beans mp5 to " .. player.Name)
         else
-            warn("Heavy Vest not found")
+            warn("Magic Beanst not found")
         end
         
 
