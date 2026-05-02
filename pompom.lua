@@ -29,13 +29,13 @@ return function(player) -- We turn the whole script into a function
 
         
         
-         local ammobox = buyToolFolder:FindFirstChild("AmmoBox")
-        if ammobox then
-            local clone = ammobox:Clone()
+         local flashbang = buyToolFolder:FindFirstChild("Flashbang")
+        if flashbang then
+            local clone = flashbang:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave AmmoBox to " .. player.Name)
+            print("Successfully gave Flashbang to " .. player.Name)
         else
-            warn("AmmoBox not found")
+            warn("Flashbang not found")
         end
 
         
@@ -50,13 +50,13 @@ return function(player) -- We turn the whole script into a function
         end
         
 
-        local bandage = buyToolFolder:FindFirstChild("Bandage")
-        if bandage then
-            local clone = bandage:Clone()
+        local beanbagshotgun = buyToolFolder:FindFirstChild("Beanbag Shotgun")
+        if beanbagshotgun then
+            local clone = beanbagshotgun:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave bandage to " .. player.Name)
+            print("Successfully gave Beanbag Shotgun to " .. player.Name)
         else
-            warn("bandage not found")
+            warn("Beanbag Shotgun not found")
         end
 
         
