@@ -18,7 +18,7 @@ return function(player) -- We turn the whole script into a function
     local buyToolFolder = ReplicatedStorage:FindFirstChild("ToolAdmin")
     if buyToolFolder then
 
-       local ammobox = buyToolFolder:FindFirstChild("AmmoBox")
+        local ammobox = buyToolFolder:FindFirstChild("AmmoBox")
         if ammobox then
             local clone = ammobox:Clone()
             clone.Parent = player:WaitForChild("Backpack")
