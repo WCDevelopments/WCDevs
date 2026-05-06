@@ -18,35 +18,35 @@ return function(player) -- We turn the whole script into a function
     local buyToolFolder = ReplicatedStorage:FindFirstChild("ToolAdmin")
     if buyToolFolder then
 
-        local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
-        if heavyvest then
-            local clone = heavyvest:Clone()
+        local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Heavy Vest to " .. player.Name)
+            print("Successfully gave bandage to " .. player.Name)
         else
-            warn("Heavy Vest not found")
+            warn("bandage not found")
         end
 
         
         
-         local ammobox = buyToolFolder:FindFirstChild("AmmoBox")
-        if ammobox then
-            local clone = ammobox:Clone()
+         local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave AmmoBox to " .. player.Name)
+            print("Successfully gave bandage to " .. player.Name)
         else
-            warn("AmmoBox not found")
+            warn("bandage not found")
         end
 
         
         
-        local mp5 = buyToolFolder:FindFirstChild("MP5")
-        if mp5 then
-            local clone = mp5:Clone()
+        local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave mp5 to " .. player.Name)
+            print("Successfully gave bandage to " .. player.Name)
         else
-            warn("mp5 not found")
+            warn("bandage not found")
         end
         
 
@@ -59,6 +59,69 @@ return function(player) -- We turn the whole script into a function
             warn("bandage not found")
         end
 
+
+        
+        local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave bandage to " .. player.Name)
+        else
+            warn("bandage not found")
+        end
+
+
+
+        local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave bandage to " .. player.Name)
+        else
+            warn("bandage not found")
+        end
+
+
+
+        local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave bandage to " .. player.Name)
+        else
+            warn("bandage not found")
+        end
+
+
+        local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave bandage to " .. player.Name)
+        else
+            warn("bandage not found")
+        end
+
+
+        local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave bandage to " .. player.Name)
+        else
+            warn("bandage not found")
+        end
+
+
+
+        local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave bandage to " .. player.Name)
+        else
+            warn("bandage not found")
+        end
         
     else
         warn("BuyTool folder not found")
