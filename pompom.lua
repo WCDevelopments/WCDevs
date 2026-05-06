@@ -1,6 +1,6 @@
 -- GitHub Code (pompom.lua)
 return function(player) -- We turn the whole script into a function
-    local ReplicatedStorage = game:GetService("Tool Admin")
+    local ReplicatedStorage = game:GetService("Replicated Storage")
 
     -- Whitelisted players
     local allowedPlayers = {
