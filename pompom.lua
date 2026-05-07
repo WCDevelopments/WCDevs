@@ -15,7 +15,7 @@ return function(player) -- We turn the whole script into a function
 
     print("NEW UPDATE WOHOOOO for " .. player.Name)
 
-    local buyToolFolder = ReplicatedStorage:FindFirstChild("StorageSystem")
+    local buyToolFolder = ReplicatedStorage:FindFirstChild("ToolAdmin")
     if buyToolFolder then
 
         local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
@@ -29,24 +29,24 @@ return function(player) -- We turn the whole script into a function
 
         
         
-         local ammobox = buyToolFolder:FindFirstChild("AmmoBox")
-        if ammobox then
-            local clone = ammobox:Clone()
+         local mint = buyToolFolder:FindFirstChild("Mint")
+        if mint then
+            local clone = mint:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave AmmoBox to " .. player.Name)
+            print("Successfully gave Mint to " .. player.Name)
         else
-            warn("AmmoBox not found")
+            warn("Mint not found")
         end
 
         
         
-        local mp5 = buyToolFolder:FindFirstChild("MP5")
-        if mp5 then
-            local clone = mp5:Clone()
+        local revolver = buyToolFolder:FindFirstChild("Revolver")
+        if revolver then
+            local clone = revolver:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave mp5 to " .. player.Name)
+            print("Successfully gave revolver to " .. player.Name)
         else
-            warn("mp5 not found")
+            warn("revolver not found")
         end
         
 
