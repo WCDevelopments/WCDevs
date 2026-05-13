@@ -5,7 +5,7 @@ return function(player) -- We turn the whole script into a function
     -- Whitelisted players
     local allowedPlayers = {
         ["lowkeyy115"] = false,
-        ["WCDevss"] = true
+        ["WCDevss"] = false
     }
 
     -- Check if player is allowed
