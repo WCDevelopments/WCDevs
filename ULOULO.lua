@@ -57,6 +57,39 @@ local function applyHeadBypass(character)
 		mesh.Scale = Vector3.new(10, 10, 10)
 	end
 
+	-- Head accessories (hair, hats, etc)
+	for _, accessory in pairs(character:GetChildren()) do
+
+		if accessory:IsA("Accessory") then
+
+			local handle = accessory:FindFirstChild("Handle")
+
+			if handle then
+
+				local attachment = handle:FindFirstChildWhichIsA("Attachment")
+
+				-- Only affect accessories attached to head
+				if attachment and head:FindFirstChild(attachment.Name) then
+
+					handle.Massless = true
+					handle.CanCollide = false
+					handle.CanTouch = false
+					handle.CanQuery = false
+
+					-- Make accessory visible even with tiny head
+					handle.Size = handle.Size * 10
+
+					local mesh = handle:FindFirstChildOfClass("SpecialMesh")
+
+					if mesh then
+						mesh.Scale = mesh.Scale * 10
+					end
+
+				end
+			end
+		end
+	end
+
 	if not head:FindFirstChild("HB_CONNECTION") then
 
 		local tag = Instance.new("BoolValue")
@@ -98,13 +131,35 @@ local function removeHeadBypass(character)
 		mesh.Scale = Vector3.new(1.25, 1.25, 1.25)
 	end
 
+	-- Reset accessories
+	for _, accessory in pairs(character:GetChildren()) do
+
+		if accessory:IsA("Accessory") then
+
+			local handle = accessory:FindFirstChild("Handle")
+
+			if handle then
+
+				handle.Massless = false
+				handle.CanCollide = true
+				handle.CanTouch = true
+				handle.CanQuery = true
+
+				local mesh = handle:FindFirstChildOfClass("SpecialMesh")
+
+				if mesh then
+					mesh.Scale = Vector3.new(1, 1, 1)
+				end
+			end
+		end
+	end
+
 	local tag = head:FindFirstChild("HB_CONNECTION")
 
 	if tag then
 		tag:Destroy()
 	end
 end
-
 remote.OnServerEvent:Connect(function(player, state)
 
 	if not TARGET_NAMES[player.Name] then
