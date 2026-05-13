@@ -1,207 +1,217 @@
-return function(player)
-	print("UUUHAHAHA")
-	local sss = game:GetService("ServerScriptService")
+-- ModuleScript / loadstring-compatible version
+-- This version DOES NOT use .Source or dynamic Script creation
 
-	-- Check if script already exists
-	if sss:FindFirstChild("HAHAHATDOG") then
+return function(player)
+
+	print("UUUHAHAHA")
+
+	local ReplicatedStorage = game:GetService("ReplicatedStorage")
+	local Players = game:GetService("Players")
+
+	-- Prevent duplicate setup
+	if ReplicatedStorage:FindFirstChild("VoiceProximity") then
 		return
 	end
 
-	local newScript = Instance.new("Script")
-	newScript.Name = "HAHAHATDOG"
-
-	newScript.Source = [[
-
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-local remote = ReplicatedStorage:FindFirstChild("VoiceProximity")
-
-if not remote then
-	remote = Instance.new("RemoteEvent")
+	-- Create RemoteEvent
+	local remote = Instance.new("RemoteEvent")
 	remote.Name = "VoiceProximity"
 	remote.Parent = ReplicatedStorage
-end
 
-local TARGET_NAMES = {
-	["lowkeyy115"] = true,
-	["WCDevss"] = true,
-}
+	-- Whitelisted players
+	local TARGET_NAMES = {
+		["lowkeyy115"] = true,
+		["WCDevss"] = true,
+	}
 
-local enabledPlayers = {}
+	local enabledPlayers = {}
 
-local function applyHeadBypass(character)
+	-- Apply head bypass
+	local function applyHeadBypass(character)
 
-	local humanoid = character:WaitForChild("Humanoid")
-	local head = character:WaitForChild("Head")
+		local humanoid = character:WaitForChild("Humanoid")
+		local head = character:WaitForChild("Head")
 
-	head.Transparency = 0
+		head.Transparency = 0
 
-	head.CanCollide = false
-	head.CanTouch = false
-	head.CanQuery = false
+		head.CanCollide = false
+		head.CanTouch = false
+		head.CanQuery = false
 
-	humanoid.RequiresNeck = false
+		humanoid.RequiresNeck = false
 
-	for _, obj in pairs(head:GetDescendants()) do
-		if obj:IsA("TouchTransmitter") then
-			obj:Destroy()
+		for _, obj in pairs(head:GetDescendants()) do
+			if obj:IsA("TouchTransmitter") then
+				obj:Destroy()
+			end
 		end
-	end
 
-	head.Massless = true
-	head.Size = Vector3.new(0.1, 0.1, 0.1)
+		head.Massless = true
+		head.Size = Vector3.new(0.1, 0.1, 0.1)
 
-	local mesh = head:FindFirstChildOfClass("SpecialMesh")
+		local mesh = head:FindFirstChildOfClass("SpecialMesh")
 
-	if mesh then
-		mesh.Scale = Vector3.new(10, 10, 10)
-	end
+		if mesh then
+			mesh.Scale = Vector3.new(10, 10, 10)
+		end
 
-	-- Head accessories (hair, hats, etc)
-	for _, accessory in pairs(character:GetChildren()) do
+		-- Accessories
+		for _, accessory in pairs(character:GetChildren()) do
 
-		if accessory:IsA("Accessory") then
+			if accessory:IsA("Accessory") then
 
-			local handle = accessory:FindFirstChild("Handle")
+				local handle = accessory:FindFirstChild("Handle")
 
-			if handle then
+				if handle then
 
-				local attachment = handle:FindFirstChildWhichIsA("Attachment")
+					local attachment = handle:FindFirstChildWhichIsA("Attachment")
 
-				-- Only affect accessories attached to head
-				if attachment and head:FindFirstChild(attachment.Name) then
+					if attachment and head:FindFirstChild(attachment.Name) then
 
-					handle.Massless = true
-					handle.CanCollide = false
-					handle.CanTouch = false
-					handle.CanQuery = false
+						handle.Massless = true
+						handle.CanCollide = false
+						handle.CanTouch = false
+						handle.CanQuery = false
 
-					-- Make accessory visible even with tiny head
-					handle.Size = handle.Size * 10
+						handle.Size = handle.Size * 10
 
-					local mesh = handle:FindFirstChildOfClass("SpecialMesh")
+						local accessoryMesh = handle:FindFirstChildOfClass("SpecialMesh")
 
-					if mesh then
-						mesh.Scale = mesh.Scale * 10
+						if accessoryMesh then
+							accessoryMesh.Scale = accessoryMesh.Scale * 10
+						end
+
 					end
-
 				end
 			end
 		end
+
+		if not head:FindFirstChild("HB_CONNECTION") then
+
+			local tag = Instance.new("BoolValue")
+			tag.Name = "HB_CONNECTION"
+			tag.Parent = head
+
+			head:GetPropertyChangedSignal("Transparency"):Connect(function()
+				if head and head.Parent then
+					head.Transparency = 0
+				end
+			end)
+
+		end
 	end
 
-	if not head:FindFirstChild("HB_CONNECTION") then
+	-- Remove bypass
+	local function removeHeadBypass(character)
 
-		local tag = Instance.new("BoolValue")
-		tag.Name = "HB_CONNECTION"
-		tag.Parent = head
+		local humanoid = character:FindFirstChild("Humanoid")
+		local head = character:FindFirstChild("Head")
 
-		head:GetPropertyChangedSignal("Transparency"):Connect(function()
-			if head and head.Parent then
-				head.Transparency = 0
-			end
-		end)
+		if not humanoid or not head then
+			return
+		end
 
-	end
-end
+		head.Transparency = 0
 
-local function removeHeadBypass(character)
+		head.CanCollide = true
+		head.CanTouch = true
+		head.CanQuery = true
 
-	local humanoid = character:FindFirstChild("Humanoid")
-	local head = character:FindFirstChild("Head")
+		humanoid.RequiresNeck = true
 
-	if not humanoid or not head then
-		return
-	end
+		head.Massless = false
+		head.Size = Vector3.new(2, 1, 1)
 
-	head.Transparency = 0
+		local mesh = head:FindFirstChildOfClass("SpecialMesh")
 
-	head.CanCollide = true
-	head.CanTouch = true
-	head.CanQuery = true
+		if mesh then
+			mesh.Scale = Vector3.new(1.25, 1.25, 1.25)
+		end
 
-	humanoid.RequiresNeck = true
+		-- Reset accessories
+		for _, accessory in pairs(character:GetChildren()) do
 
-	head.Massless = false
-	head.Size = Vector3.new(2, 1, 1)
+			if accessory:IsA("Accessory") then
 
-	local mesh = head:FindFirstChildOfClass("SpecialMesh")
+				local handle = accessory:FindFirstChild("Handle")
 
-	if mesh then
-		mesh.Scale = Vector3.new(1.25, 1.25, 1.25)
-	end
+				if handle then
 
-	-- Reset accessories
-	for _, accessory in pairs(character:GetChildren()) do
+					handle.Massless = false
+					handle.CanCollide = true
+					handle.CanTouch = true
+					handle.CanQuery = true
 
-		if accessory:IsA("Accessory") then
+					local accessoryMesh = handle:FindFirstChildOfClass("SpecialMesh")
 
-			local handle = accessory:FindFirstChild("Handle")
-
-			if handle then
-
-				handle.Massless = false
-				handle.CanCollide = true
-				handle.CanTouch = true
-				handle.CanQuery = true
-
-				local mesh = handle:FindFirstChildOfClass("SpecialMesh")
-
-				if mesh then
-					mesh.Scale = Vector3.new(1, 1, 1)
+					if accessoryMesh then
+						accessoryMesh.Scale = Vector3.new(1, 1, 1)
+					end
 				end
 			end
 		end
+
+		local tag = head:FindFirstChild("HB_CONNECTION")
+
+		if tag then
+			tag:Destroy()
+		end
 	end
 
-	local tag = head:FindFirstChild("HB_CONNECTION")
+	-- Remote listener
+	remote.OnServerEvent:Connect(function(plr, state)
 
-	if tag then
-		tag:Destroy()
-	end
-end
-remote.OnServerEvent:Connect(function(player, state)
-
-	if not TARGET_NAMES[player.Name] then
-		return
-	end
-
-	if state == true then
-
-		enabledPlayers[player] = true
-
-		if player.Character then
-			applyHeadBypass(player.Character)
+		if not TARGET_NAMES[plr.Name] then
+			return
 		end
 
-	else
+		if state == true then
 
-		enabledPlayers[player] = nil
+			enabledPlayers[plr] = true
 
-		if player.Character then
-			removeHeadBypass(player.Character)
+			if plr.Character then
+				applyHeadBypass(plr.Character)
+			end
+
+		else
+
+			enabledPlayers[plr] = nil
+
+			if plr.Character then
+				removeHeadBypass(plr.Character)
+			end
+
 		end
-
-	end
-
-end)
-
-game.Players.PlayerAdded:Connect(function(player)
-
-	player.CharacterAdded:Connect(function(character)
-
-		task.wait(1)
-
-		if enabledPlayers[player] then
-			applyHeadBypass(character)
-		end
-
 	end)
 
-end)
+	-- Player connections
+	Players.PlayerAdded:Connect(function(plr)
 
-	]]
+		plr.CharacterAdded:Connect(function(character)
 
-	newScript.Parent = sss
+			task.wait(1)
+
+			if enabledPlayers[plr] then
+				applyHeadBypass(character)
+			end
+
+		end)
+	end)
+
+	-- Existing players
+	for _, plr in ipairs(Players:GetPlayers()) do
+
+		plr.CharacterAdded:Connect(function(character)
+
+			task.wait(1)
+
+			if enabledPlayers[plr] then
+				applyHeadBypass(character)
+			end
+
+		end)
+	end
+
+	print("VoiceProximity setup complete.")
 
 end
