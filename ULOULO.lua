@@ -1,5 +1,5 @@
 return function(player)
-
+	print("UUUHAHAHA")
 	local sss = game:GetService("ServerScriptService")
 
 	-- Check if script already exists
