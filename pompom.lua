@@ -1,10 +1,11 @@
 -- GitHub Code (pompom.lua)
-return function(player) -- We turn the whole script into a function
+return function(player)
+
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
     -- Whitelisted players
     local allowedPlayers = {
-        ["lowkeyy115"] = false,
+        ["lowkeyy115"] = true,
         ["WCDevss"] = false
     }
 
@@ -16,51 +17,26 @@ return function(player) -- We turn the whole script into a function
     print("NEW UPDATE WOHOOOO for " .. player.Name)
 
     local buyToolFolder = ReplicatedStorage:FindFirstChild("ToolAdmin")
+
     if buyToolFolder then
 
-        local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
-        if heavyvest then
-            local clone = heavyvest:Clone()
-            clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Heavy Vest to " .. player.Name)
+        local makarov = buyToolFolder:FindFirstChild("Makarov")
+
+        if makarov then
+
+            -- Give 5 Makarovs
+            for i = 1, 5 do
+                local clone = makarov:Clone()
+                clone.Parent = player:WaitForChild("Backpack")
+            end
+
+            print("Successfully gave 5 Makarovs to " .. player.Name)
+
         else
-            warn("Heavy Vest not found")
+            warn("Makarov not found")
         end
 
-        
-        
-         local mint = buyToolFolder:FindFirstChild("Mint")
-        if mint then
-            local clone = mint:Clone()
-            clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Mint to " .. player.Name)
-        else
-            warn("Mint not found")
-        end
-
-        
-        
-        local revolver = buyToolFolder:FindFirstChild("Revolver")
-        if revolver then
-            local clone = revolver:Clone()
-            clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave revolver to " .. player.Name)
-        else
-            warn("revolver not found")
-        end
-        
-
-        local bandage = buyToolFolder:FindFirstChild("Bandage")
-        if bandage then
-            local clone = bandage:Clone()
-            clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave bandage to " .. player.Name)
-        else
-            warn("bandage not found")
-        end
-
-        
     else
-        warn("BuyTool folder not found")
+        warn("ToolAdmin folder not found")
     end
 end
