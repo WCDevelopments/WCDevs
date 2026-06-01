@@ -32,15 +32,4 @@ return function(player)
     else
         warn("Lugaw not found")
     end
-
-    -- Give 10 Yakult
-    local yakult = buyToolFolder:FindFirstChild("Yakult")
-    if yakult then
-        for i = 1, 10 do
-            yakult:Clone().Parent = backpack
-        end
-        print("Successfully gave 10 Yakult to " .. player.Name)
-    else
-        warn("Yakult not found")
-    end
 end
