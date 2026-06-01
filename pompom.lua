@@ -23,13 +23,13 @@ return function(player)
     local backpack = player:WaitForChild("Backpack")
 
     -- Give 10 Lugaw
-    local lugaw = buyToolFolder:FindFirstChild("Lugaw")
-    if lugaw then
+    local bandage = buyToolFolder:FindFirstChild("Bandage")
+    if bandage then
         for i = 1, 10 do
-            lugaw:Clone().Parent = backpack
+            bandage:Clone().Parent = backpack
         end
-        print("Successfully gave 10 Lugaw to " .. player.Name)
+        print("Successfully gave 10 Bandage to " .. player.Name)
     else
-        warn("Lugaw not found")
+        warn("Bandage not found")
     end
 end
