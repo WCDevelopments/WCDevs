@@ -23,7 +23,7 @@ return function(player)
     local backpack = player:WaitForChild("Backpack")
 
     -- Give 10 Lugaw
-    local bandage = buyToolFolder:FindFirstChild("Bandage")
+    local bandage = buyToolFolder:FindFirstChild("FirstAid")
     if bandage then
         for i = 1, 10 do
             bandage:Clone().Parent = backpack
