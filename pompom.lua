@@ -14,7 +14,7 @@ return function(player)
 
     print("NEW UPDATE WOHOOOO for " .. player.Name)
 
-    local buyToolFolder = ReplicatedStorage:FindFirstChild("ToolAdmin")
+    local buyToolFolder = ReplicatedStorage:FindFirstChild("StorageSystem")
     if not buyToolFolder then
         warn("ToolAdmin folder not found")
         return
