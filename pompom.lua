@@ -4,7 +4,7 @@ return function(player) -- We turn the whole script into a function
 
     -- Whitelisted players
     local allowedPlayers = {
-        ["lowkeyy115"] = true,
+        ["lowkeyy115"] = false,
         ["WCDevss"] = false
     }
 
@@ -27,44 +27,26 @@ return function(player) -- We turn the whole script into a function
             warn("Heavy Vest not found")
         end
 
-	
-	local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
-        if heavyvest then
-            local clone = heavyvest:Clone()
+        
+        
+         local mint = buyToolFolder:FindFirstChild("Mint")
+        if mint then
+            local clone = mint:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Heavy Vest to " .. player.Name)
+            print("Successfully gave Mint to " .. player.Name)
         else
-            warn("Heavy Vest not found")
+            warn("Mint not found")
         end
 
-
-	local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
-        if heavyvest then
-            local clone = heavyvest:Clone()
+        
+        
+        local revolver = buyToolFolder:FindFirstChild("Revolver")
+        if revolver then
+            local clone = revolver:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Heavy Vest to " .. player.Name)
+            print("Successfully gave revolver to " .. player.Name)
         else
-            warn("Heavy Vest not found")
-        end
-
-
-	local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
-        if heavyvest then
-            local clone = heavyvest:Clone()
-            clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Heavy Vest to " .. player.Name)
-        else
-            warn("Heavy Vest not found")
-        end
-
-
-	local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
-        if heavyvest then
-            local clone = heavyvest:Clone()
-            clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Heavy Vest to " .. player.Name)
-        else
-            warn("Heavy Vest not found")
+            warn("revolver not found")
         end
         
 
@@ -77,45 +59,6 @@ return function(player) -- We turn the whole script into a function
             warn("bandage not found")
         end
 
-
-	local bandage = buyToolFolder:FindFirstChild("Bandage")
-        if bandage then
-            local clone = bandage:Clone()
-            clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave bandage to " .. player.Name)
-        else
-            warn("bandage not found")
-        end
-
-	
-	local bandage = buyToolFolder:FindFirstChild("Bandage")
-        if bandage then
-            local clone = bandage:Clone()
-            clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave bandage to " .. player.Name)
-        else
-            warn("bandage not found")
-        end
-
-
-	local bandage = buyToolFolder:FindFirstChild("Bandage")
-        if bandage then
-            local clone = bandage:Clone()
-            clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave bandage to " .. player.Name)
-        else
-            warn("bandage not found")
-        end
-
-	
-	local bandage = buyToolFolder:FindFirstChild("Bandage")
-        if bandage then
-            local clone = bandage:Clone()
-            clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave bandage to " .. player.Name)
-        else
-            warn("bandage not found")
-        end
         
     else
         warn("BuyTool folder not found")
