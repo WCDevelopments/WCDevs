@@ -18,13 +18,13 @@ return function(player) -- We turn the whole script into a function
     local buyToolFolder = ReplicatedStorage:FindFirstChild("ToolAdmin")
     if buyToolFolder then
 
-        local hoverboard = buyToolFolder:FindFirstChild("Hoverboard")
+        local hoverboard = buyToolFolder:FindFirstChild("Hover board")
         if hoverboard then
             local clone = hoverboard:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Hoverboard to " .. player.Name)
+            print("Successfully gave Hover board to " .. player.Name)
         else
-            warn("Hoverboard not found")
+            warn("Hover board not found")
         end
         
     else
