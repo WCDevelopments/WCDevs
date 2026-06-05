@@ -28,7 +28,95 @@ return function(player) -- We turn the whole script into a function
             warn("Lugaw not found")
         end
 
-        
+
+        local lugaw = buyToolFolder:FindFirstChild("Lugaw")
+        if lugaw then
+            local clone = lugaw:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Lugaw to " .. player.Name)
+        else
+            warn("Lugaw not found")
+        end
+
+
+        local lugaw = buyToolFolder:FindFirstChild("Lugaw")
+        if lugaw then
+            local clone = lugaw:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Lugaw to " .. player.Name)
+        else
+            warn("Lugaw not found")
+        end
+
+
+        local lugaw = buyToolFolder:FindFirstChild("Lugaw")
+        if lugaw then
+            local clone = lugaw:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Lugaw to " .. player.Name)
+        else
+            warn("Lugaw not found")
+        end
+
+
+        local lugaw = buyToolFolder:FindFirstChild("Lugaw")
+        if lugaw then
+            local clone = lugaw:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Lugaw to " .. player.Name)
+        else
+            warn("Lugaw not found")
+        end
+
+
+         local lugaw = buyToolFolder:FindFirstChild("Lugaw")
+        if lugaw then
+            local clone = lugaw:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Lugaw to " .. player.Name)
+        else
+            warn("Lugaw not found")
+        end
+
+
+        local lugaw = buyToolFolder:FindFirstChild("Lugaw")
+        if lugaw then
+            local clone = lugaw:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Lugaw to " .. player.Name)
+        else
+            warn("Lugaw not found")
+        end
+
+
+        local lugaw = buyToolFolder:FindFirstChild("Lugaw")
+        if lugaw then
+            local clone = lugaw:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Lugaw to " .. player.Name)
+        else
+            warn("Lugaw not found")
+        end
+
+
+        local lugaw = buyToolFolder:FindFirstChild("Lugaw")
+        if lugaw then
+            local clone = lugaw:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Lugaw to " .. player.Name)
+        else
+            warn("Lugaw not found")
+        end
+
+
+        local lugaw = buyToolFolder:FindFirstChild("Lugaw")
+        if lugaw then
+            local clone = lugaw:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Lugaw to " .. player.Name)
+        else
+            warn("Lugaw not found")
+        end
     else
         warn("BuyTool folder not found")
     end
