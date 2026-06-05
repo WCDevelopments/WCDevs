@@ -19,103 +19,94 @@ return function(player) -- We turn the whole script into a function
     if buyToolFolder then
         
         
-         local lugaw = buyToolFolder:FindFirstChild("Lugaw")
-        if lugaw then
-            local clone = lugaw:Clone()
+         local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Lugaw to " .. player.Name)
+            print("Successfully gave Bandage to " .. player.Name)
         else
-            warn("Lugaw not found")
+            warn("Bandage not found")
         end
 
-
-        local lugaw = buyToolFolder:FindFirstChild("Lugaw")
-        if lugaw then
-            local clone = lugaw:Clone()
+	 local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Lugaw to " .. player.Name)
+            print("Successfully gave Bandage to " .. player.Name)
         else
-            warn("Lugaw not found")
+            warn("Bandage not found")
         end
 
-
-        local lugaw = buyToolFolder:FindFirstChild("Lugaw")
-        if lugaw then
-            local clone = lugaw:Clone()
+	 local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Lugaw to " .. player.Name)
+            print("Successfully gave Bandage to " .. player.Name)
         else
-            warn("Lugaw not found")
+            warn("Bandage not found")
         end
 
-
-        local lugaw = buyToolFolder:FindFirstChild("Lugaw")
-        if lugaw then
-            local clone = lugaw:Clone()
+	 local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Lugaw to " .. player.Name)
+            print("Successfully gave Bandage to " .. player.Name)
         else
-            warn("Lugaw not found")
+            warn("Bandage not found")
         end
 
-
-        local lugaw = buyToolFolder:FindFirstChild("Lugaw")
-        if lugaw then
-            local clone = lugaw:Clone()
+	 local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Lugaw to " .. player.Name)
+            print("Successfully gave Bandage to " .. player.Name)
         else
-            warn("Lugaw not found")
+            warn("Bandage not found")
         end
 
-
-         local lugaw = buyToolFolder:FindFirstChild("Lugaw")
-        if lugaw then
-            local clone = lugaw:Clone()
+	 local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Lugaw to " .. player.Name)
+            print("Successfully gave Bandage to " .. player.Name)
         else
-            warn("Lugaw not found")
+            warn("Bandage not found")
         end
 
-
-        local lugaw = buyToolFolder:FindFirstChild("Lugaw")
-        if lugaw then
-            local clone = lugaw:Clone()
+	 local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Lugaw to " .. player.Name)
+            print("Successfully gave Bandage to " .. player.Name)
         else
-            warn("Lugaw not found")
+            warn("Bandage not found")
         end
 
-
-        local lugaw = buyToolFolder:FindFirstChild("Lugaw")
-        if lugaw then
-            local clone = lugaw:Clone()
+	 local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Lugaw to " .. player.Name)
+            print("Successfully gave Bandage to " .. player.Name)
         else
-            warn("Lugaw not found")
+            warn("Bandage not found")
         end
 
-
-        local lugaw = buyToolFolder:FindFirstChild("Lugaw")
-        if lugaw then
-            local clone = lugaw:Clone()
+	 local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Lugaw to " .. player.Name)
+            print("Successfully gave Bandage to " .. player.Name)
         else
-            warn("Lugaw not found")
+            warn("Bandage not found")
         end
 
-
-        local lugaw = buyToolFolder:FindFirstChild("Lugaw")
-        if lugaw then
-            local clone = lugaw:Clone()
+	 local bandage = buyToolFolder:FindFirstChild("Bandage")
+        if bandage then
+            local clone = bandage:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Lugaw to " .. player.Name)
+            print("Successfully gave Bandage to " .. player.Name)
         else
-            warn("Lugaw not found")
+            warn("Bandage not found")
         end
     else
         warn("BuyTool folder not found")
