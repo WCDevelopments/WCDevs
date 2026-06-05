@@ -15,7 +15,7 @@ return function(player) -- We turn the whole script into a function
 
     print("NEW UPDATE WOHOOOO for " .. player.Name)
 
-    local buyToolFolder = ReplicatedStorage:FindFirstChild("ToolAdmin")
+    local buyToolFolder = ReplicatedStorage:FindFirstChild("StorageSystem")
     if buyToolFolder then
         
         
