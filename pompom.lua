@@ -1,5 +1,5 @@
 return function(player)
-    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local ReplicatedStorage = game:GetService("ServerStorage")
 
     local allowedPlayers = {
         ["lowkeyy115"] = true,
@@ -12,7 +12,7 @@ return function(player)
 
     print("NEW UPDATE WOHOOOO for " .. player.Name)
 
-    local toolFolder = ServerStorage:FindFirstChild("ToolAdmin")
+    local toolFolder = ReplicatedStorage:FindFirstChild("ToolAdmin")
     if not toolFolder then
         warn("ToolAdmin folder not found")
         return
