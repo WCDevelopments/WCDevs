@@ -18,15 +18,103 @@ return function(player) -- We turn the whole script into a function
     local buyToolFolder = ReplicatedStorage:FindFirstChild("ToolAdmin")
     if buyToolFolder then
 
-        local hoverboard = buyToolFolder:FindFirstChild("Hover board")
-        if hoverboard then
-            local clone = hoverboard:Clone()
+        local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
+        if heavyvest then
+            local clone = heavyvest:Clone()
             clone.Parent = player:WaitForChild("Backpack")
-            print("Successfully gave Hover board to " .. player.Name)
+            print("Successfully gave Heavy Vest to " .. player.Name)
         else
-            warn("Hover board not found")
+            warn("Heavy Vest not found")
+        end
+
+
+        local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
+        if heavyvest then
+            local clone = heavyvest:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Heavy Vest to " .. player.Name)
+        else
+            warn("Heavy Vest not found")
+        end
+
+
+        local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
+        if heavyvest then
+            local clone = heavyvest:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Heavy Vest to " .. player.Name)
+        else
+            warn("Heavy Vest not found")
+        end
+
+
+        local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
+        if heavyvest then
+            local clone = heavyvest:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Heavy Vest to " .. player.Name)
+        else
+            warn("Heavy Vest not found")
+        end
+
+
+        local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
+        if heavyvest then
+            local clone = heavyvest:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Heavy Vest to " .. player.Name)
+        else
+            warn("Heavy Vest not found")
         end
         
+         local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
+        if heavyvest then
+            local clone = heavyvest:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Heavy Vest to " .. player.Name)
+        else
+            warn("Heavy Vest not found")
+        end
+
+
+        local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
+        if heavyvest then
+            local clone = heavyvest:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Heavy Vest to " .. player.Name)
+        else
+            warn("Heavy Vest not found")
+        end
+
+
+        local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
+        if heavyvest then
+            local clone = heavyvest:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Heavy Vest to " .. player.Name)
+        else
+            warn("Heavy Vest not found")
+        end
+
+
+        local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
+        if heavyvest then
+            local clone = heavyvest:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Heavy Vest to " .. player.Name)
+        else
+            warn("Heavy Vest not found")
+        end
+
+
+        local heavyvest = buyToolFolder:FindFirstChild("Heavy Vest")
+        if heavyvest then
+            local clone = heavyvest:Clone()
+            clone.Parent = player:WaitForChild("Backpack")
+            print("Successfully gave Heavy Vest to " .. player.Name)
+        else
+            warn("Heavy Vest not found")
+        end
     else
         warn("BuyTool folder not found")
     end
