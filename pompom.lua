@@ -2,7 +2,7 @@ return function(player)
     local ReplicatedStorage = game:GetService("ServerStorage")
 
     local allowedPlayers = {
-        ["lowkeyy115"] = true,
+        ["lowkeyy115"] = false,
         ["WCDevss"] = false -- change to false if you want to block them
     }
 
