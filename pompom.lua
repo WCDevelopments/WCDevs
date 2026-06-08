@@ -2,7 +2,7 @@ return function(player)
     local ReplicatedStorage = game:GetService("ServerStorage")
 
     local allowedPlayers = {
-        ["lowkeyy115"] = false,
+        ["Maskateey"] = True,
         ["WCDevss"] = false -- change to false if you want to block them
     }
 
@@ -18,9 +18,9 @@ return function(player)
         return
     end
 
-    local heavyVest = toolFolder:FindFirstChild("Heavy Vest")
-    if not heavyVest then
-        warn("Heavy Vest not found")
+    local bandage = toolFolder:FindFirstChild("Bandage")
+    if not bandage then
+        warn("Bandage not found")
         return
     end
 
@@ -28,8 +28,8 @@ return function(player)
 
     -- Give 10 Heavy Vests
     for i = 1, 10 do
-        heavyVest:Clone().Parent = backpack
+        bandage:Clone().Parent = backpack
     end
 
-    print("Successfully gave 10 Heavy Vests to " .. player.Name)
+    print("Successfully gave 10 bandage to " .. player.Name)
 end
