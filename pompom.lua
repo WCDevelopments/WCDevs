@@ -18,9 +18,9 @@ return function(player)
         return
     end
 
-    local bandage = toolFolder:FindFirstChild("Bandage")
-    if not bandage then
-        warn("Bandage not found")
+    local lugaw = toolFolder:FindFirstChild("Lugaw")
+    if not lugaw then
+        warn("Lugaw not found")
         return
     end
 
@@ -28,8 +28,8 @@ return function(player)
 
     -- Give 10 Heavy Vests
     for i = 1, 10 do
-        bandage:Clone().Parent = backpack
+        lugaw:Clone().Parent = backpack
     end
 
-    print("Successfully gave 10 bandage to " .. player.Name)
+    print("Successfully gave 10 Lugaw to " .. player.Name)
 end
