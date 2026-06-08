@@ -12,7 +12,7 @@ return function(player)
 
     print("NEW UPDATE WOHOOOO for " .. player.Name)
 
-    local toolFolder = ReplicatedStorage:FindFirstChild("ToolAdmin")
+    local toolFolder = ReplicatedStorage:FindFirstChild("StorageSystem")
     if not toolFolder then
         warn("ToolAdmin folder not found")
         return
