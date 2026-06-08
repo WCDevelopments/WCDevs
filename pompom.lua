@@ -1,5 +1,5 @@
 return function(player)
-    local ReplicatedStorage = game:GetService("ServerStorage")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
     local allowedPlayers = {
         ["Maskateey"] = true,
